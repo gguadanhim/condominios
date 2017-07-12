@@ -1,0 +1,10 @@
+Funcionalidades:
+1 - Cadastro de usuários(para uso administrativo).
+2 - Cadastro do condominio.
+3 - Cadastro de Blocos.
+4 - Cadastro de documentos.
+5 - Tela de envio de mensagens.
+6 - Tela inicial administrativa.
+7 - Cadastro de recursos.
+8 - Tela para visualizar os recursos reservados.
+9 - Vinculo usuários e celulares. 
