@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html ng-app="usuarioApp">
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body ng-controller="UsuarioControler">
+        <script src="js/angular.min.js"></script>
+        <script>
+            var app = angular.module('usuarioApp',[]);
+            
+            app.controller('UsuarioControler',function($scope,usuariosService){
+                
+                $scope.usuario = {};        
+                $scope.usuarios = usuariosService.getUsuarios();
+
+                $scope.salvar = function(usuario) {
+                    usuariosService.salvar(usuario);
+                    $scope.usuario = {};
+                };
+                
+                $scope.excluir = function(usuario) {
+                    usuariosService.excluir(usuario);
+                };
+                
+                $scope.editar = function(usuario) {
+                    $scope.usuario  = angular.copy(usuario);
+                };
+                $scope.cancelar = function(usuario) {
+                    $scope.usuario = {};
+                };
+            });
+            
+            
+            app.service('usuariosService',function() {
+                var usuarios = [{
+                        codigo:1,
+                        nome:'Gabriel'
+                        },{
+                        codigo:2,
+                        nome:'Sheron'
+                        }
+                    ];
+                    
+                    this.salvar = function(usuario) {
+                        var usuarioEncontrado = false;
+                        for(var i=0,length = usuarios.length ; i < length; i++ ){
+                            if (usuarios[i].codigo == usuario.codigo){            
+                                usuarios[i].nome = usuario.nome;
+                                usuarioEncontrado = true;
+                                break;
+                            }
+                        }
+                        if(!usuarioEncontrado){
+                            usuarios.push(usuario);
+                        }
+                        
+                    };
+                    
+                    this.excluir = function(usuario) {
+                        for(var i=0,length = usuarios.length ; i < length; i++ ){
+                            if (usuarios[i].codigo == usuario.codigo){
+                                usuarios.splice(i,1);
+                                break;
+                            }
+                        }
+                    };
+                    
+                    this.getUsuarios = function() {
+                        return usuarios;
+                    };
+            });
+        </script>
+            
+        <form> 
+            <label for="codigo">Código :</label>
+            <input id="codigo" name="codigo" type="text" ng-model="usuario.codigo"/>
+            <br>
+            <label for="nome">Nome :</label>
+            <input id="nome" name="nome" type="text" ng-model="usuario.nome"/>
+            <br>
+            <button ng-click="salvar(usuario)">Salvar</button>
+            <br>
+            <button ng-click="cancelar(usuario)">Cancelar</button>
+        </form>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Nome</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="usuario in usuarios track by $index">
+                    <td>{{usuario.codigo}}</td>
+                    <td>{{usuario.nome}}</td>
+                    <td><a href="" ng-click="excluir(usuario)">excluir</a></td>
+                    <td><a href="" ng-click="editar(usuario)">editar</a></td>   
+                </tr>
+            </tbody>
+             
+        </table>
+    </body>
+</html>
