@@ -16,9 +16,13 @@ and open the template in the editor.
             var app = angular.module('usuarioApp',[]);
             
             app.controller('UsuarioControler',function($scope,usuariosService){
+
+                $scope.usuario = {};
                 
-                $scope.usuario = {};        
-                $scope.usuarios = usuariosService.getUsuarios();
+                usuariosService.getUsuarios().then(function(resposta){
+                    $scope.usuarios = resposta.data;
+                });
+                
 
                 $scope.salvar = function(usuario) {
                     usuariosService.salvar(usuario);
@@ -38,15 +42,17 @@ and open the template in the editor.
             });
             
             
-            app.service('usuariosService',function() {
-                var usuarios = [{
-                        codigo:1,
-                        nome:'Gabriel'
-                        },{
-                        codigo:2,
-                        nome:'Sheron'
-                        }
-                    ];
+            app.service('usuariosService',function($http) {
+
+                    this.getUsuarios = function() {
+                        return $http({
+                                method: 'GET',
+                                url: 'http://localhost:8084/condominio_backend/webresources/model.usuario',
+                                responseType:'json'
+                            });
+                            
+                            
+                    };
                     
                     this.salvar = function(usuario) {
                         var usuarioEncontrado = false;
@@ -72,9 +78,7 @@ and open the template in the editor.
                         }
                     };
                     
-                    this.getUsuarios = function() {
-                        return usuarios;
-                    };
+                    
             });
         </script>
             
