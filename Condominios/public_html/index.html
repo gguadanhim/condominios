@@ -19,18 +19,25 @@ and open the template in the editor.
 
                 $scope.usuario = {};
                 
-                usuariosService.getUsuarios().then(function(resposta){
-                    $scope.usuarios = resposta.data;
-                });
+                listarUsuarios();
                 
+                function listarUsuarios(){
+                    usuariosService.getUsuarios().then(function(resposta){
+                        $scope.usuarios = resposta.data;
+                    });
+                };
 
                 $scope.salvar = function(usuario) {
-                    usuariosService.salvar(usuario);
+                    usuariosService.salvarUsuario(usuario).then(function(){
+                        listarUsuarios();
+                    });
                     $scope.usuario = {};
                 };
                 
                 $scope.excluir = function(usuario) {
-                    usuariosService.excluir(usuario);
+                    usuariosService.excluir(usuario).then(function(){
+                        listarUsuarios();
+                    });
                 };
                 
                 $scope.editar = function(usuario) {
@@ -43,48 +50,30 @@ and open the template in the editor.
             
             
             app.service('usuariosService',function($http) {
+                var url = 'http://localhost:8084/condominio_backend/webresources/model.usuario';
 
-                    this.getUsuarios = function() {
-                        return $http({
-                                method: 'GET',
-                                url: 'http://localhost:8084/condominio_backend/webresources/model.usuario',
-                                responseType:'json'
-                            });
+                this.getUsuarios = function() {
+                    return $http.get(url);
+                };
                             
-                            
-                    };
+                this.salvarUsuario = function(usuario) {
+                    if (usuario.id){            
+                        return $http.put(url+'/'+ usuario.id, usuario);
+                    }else{
+                        return $http.post(url,usuario);
+                    }
+
+                };
                     
-                    this.salvar = function(usuario) {
-                        var usuarioEncontrado = false;
-                        for(var i=0,length = usuarios.length ; i < length; i++ ){
-                            if (usuarios[i].codigo == usuario.codigo){            
-                                usuarios[i].nome = usuario.nome;
-                                usuarioEncontrado = true;
-                                break;
-                            }
-                        }
-                        if(!usuarioEncontrado){
-                            usuarios.push(usuario);
-                        }
-                        
-                    };
-                    
-                    this.excluir = function(usuario) {
-                        for(var i=0,length = usuarios.length ; i < length; i++ ){
-                            if (usuarios[i].codigo == usuario.codigo){
-                                usuarios.splice(i,1);
-                                break;
-                            }
-                        }
-                    };
-                    
-                    
+                this.excluir = function(usuario) {
+                    return $http.delete(url+'/'+usuario.id);
+                };  
             });
         </script>
             
         <form> 
             <label for="codigo">Código :</label>
-            <input id="codigo" name="codigo" type="text" ng-model="usuario.codigo"/>
+            <input id="id" name="id" type="text" ng-model="usuario.id"/>
             <br>
             <label for="nome">Nome :</label>
             <input id="nome" name="nome" type="text" ng-model="usuario.nome"/>
@@ -105,7 +94,7 @@ and open the template in the editor.
             </thead>
             <tbody>
                 <tr ng-repeat="usuario in usuarios track by $index">
-                    <td>{{usuario.codigo}}</td>
+                    <td>{{usuario.id}}</td>
                     <td>{{usuario.nome}}</td>
                     <td><a href="" ng-click="excluir(usuario)">excluir</a></td>
                     <td><a href="" ng-click="editar(usuario)">editar</a></td>   
