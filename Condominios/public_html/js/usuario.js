@@ -4,7 +4,16 @@
  * and open the template in the editor.
  */
 
-var app = angular.module('usuarioApp',[]);
+var app = angular.module('usuarioApp',['ngRoute']);
+
+app.config(function($routeProvider){
+    
+    $routeProvider.when('/cadastro',{
+        templateUrl : 'templates/cadastro_usuario.html'
+    }).when('/listagem',{
+        templateUrl : 'templates/listagem_usuario.html'
+    }).otherwise('/listagem');
+});
 
 app.controller('UsuarioControler',function($scope,usuariosService){
 

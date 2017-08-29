@@ -11,39 +11,14 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body ng-controller="UsuarioControler">
-        <script src="js/angular.min.js"></script>
-        <script src="js/usuario.js"></script>
-            
-        <form> 
-            <label for="codigo">Código :</label>
-            <input id="id" name="id" type="text" ng-model="usuario.id"/>
-            <br>
-            <label for="nome">Nome :</label>
-            <input id="nome" name="nome" type="text" ng-model="usuario.nome"/>
-            <br>
-            <button ng-click="salvar(usuario)">Salvar</button>
-            <br>
-            <button ng-click="cancelar(usuario)">Cancelar</button>
-        </form>
         
-        <table>
-            <thead>
-                <tr>
-                    <th>Código</th>
-                    <th>Nome</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="usuario in usuarios track by $index">
-                    <td>{{usuario.id}}</td>
-                    <td>{{usuario.nome}}</td>
-                    <td><a href="" ng-click="excluir(usuario)">excluir</a></td>
-                    <td><a href="" ng-click="editar(usuario)">editar</a></td>   
-                </tr>
-            </tbody>
-             
-        </table>
+        <h1>Usuario</h1>
+        [<a href="#!/cadastro">Cadastro</a>|<a href="#!/listagem">Listagem</a>]
+        <ng-view></ng-view>    
+        
+        <script src="js/angular.min.js"></script>
+        <script src="js/angular-route.min.js"></script>
+        <script src="js/usuario.js"></script>
+        
     </body>
 </html>
