@@ -4,68 +4,93 @@
  * and open the template in the editor.
  */
 
-var app = angular.module('usuarioApp',['ngRoute']);
+var app = angular.module('usuarioApp',['ngRoute','ngResource']);
 
 app.config(function($routeProvider){
     
     $routeProvider.when('/cadastro',{
+        controller: 'CadastroUsuarioControler',
+        templateUrl : 'templates/cadastro_usuario.html'
+    }).when('/cadastro/:id',{
+        controller: 'CadastroUsuarioControler',
         templateUrl : 'templates/cadastro_usuario.html'
     }).when('/listagem',{
+        controller: 'ListagemUsuarioControler',
         templateUrl : 'templates/listagem_usuario.html'
     }).otherwise('/listagem');
 });
 
-app.controller('UsuarioControler',function($scope,usuariosService){
 
-    $scope.usuario = {};
-
+app.controller('ListagemUsuarioControler',function($scope,usuariosService){
     listarUsuarios();
 
     function listarUsuarios(){
-        usuariosService.getUsuarios().then(function(resposta){
-            $scope.usuarios = resposta.data;
+        usuariosService.getUsuarios().then(function(usuarios){
+            $scope.usuarios = usuarios;
         });
     };
-
-    $scope.salvar = function(usuario) {
-        usuariosService.salvarUsuario(usuario).then(function(){
-            listarUsuarios();
-        });
-        $scope.usuario = {};
-    };
-
+    
     $scope.excluir = function(usuario) {
         usuariosService.excluir(usuario).then(function(){
             listarUsuarios();
         });
     };
+});
 
-    $scope.editar = function(usuario) {
-        $scope.usuario  = angular.copy(usuario);
+app.controller('CadastroUsuarioControler',function($routeParams,$scope,$location,usuariosService){
+    var id = $routeParams.id;
+    
+    if(id){
+        usuariosService.getUsuario(id).then(function(usuarios){
+            $scope.usuario = usuarios;
+        });
+    }else{
+        $scope.usuario = {};
+    }
+    
+    $scope.salvar = function(usuario) {
+        usuariosService.salvarUsuario(usuario).then(function(){
+            $location.path('listagem');
+        });
+        $scope.usuario = {};
     };
+
     $scope.cancelar = function(usuario) {
         $scope.usuario = {};
+        $location.path('listagem');
     };
 });
 
 
-app.service('usuariosService',function($http) {
-    var url = 'http://localhost:8084/condominio_backend/webresources/model.usuario';
+app.service('usuariosService',function(UsuariosResource) {
+
+
+    this.getUsuario = function(id) {
+        return UsuariosResource.get({id:id}).$promise;
+    };
 
     this.getUsuarios = function() {
-        return $http.get(url);
+        return UsuariosResource.query().$promise;
     };
 
     this.salvarUsuario = function(usuario) {
         if (usuario.id){            
-            return $http.put(url+'/'+ usuario.id, usuario);
+            return UsuariosResource.update({id : usuario.id},usuario).$promise;
         }else{
-            return $http.post(url,usuario);
+            return UsuariosResource.save(usuario).$promise;
         }
 
     };
 
     this.excluir = function(usuario) {
-        return $http.delete(url+'/'+usuario.id);
+        return UsuariosResource.delete({id : usuario.id}).$promise;
     };  
+});
+
+
+app.factory('UsuariosResource',function($resource){
+         return $resource('http://localhost:8084/condominio_backend/webresources/model.usuario/:id',{},{
+                    update:{
+                        method:'PUT'
+                    }})
 });
