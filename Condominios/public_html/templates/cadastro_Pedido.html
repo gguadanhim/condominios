@@ -1,0 +1,16 @@
+<h1>Pedido</h1>
+
+<form> 
+    <label for="codigo">Código :</label>
+    <input id="id" name="id" type="text" ng-model="Pedidos.id"/>
+    <br>
+    <label for="valor_total">Valor total :</label>
+    <input id="valor_total" name="valor_total" type="text" ng-model="Pedidos.valor_total"/>
+    <br>
+    <label for="status">Status :</label>
+    <input id="status" name="status" type="text" ng-model="Pedidos.status"/>
+    <br>
+    <button ng-click="salvar(Pedidos)">Salvar</button>
+    <br>
+    <button ng-click="cancelar(Pedidos)">Cancelar</button>
+</form>

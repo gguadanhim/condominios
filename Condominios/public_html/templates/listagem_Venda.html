@@ -1,0 +1,26 @@
+<h1>Vendas</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Valor total</th>
+            <th>Detalhes</th>
+            <th>Status</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="Venda in Vendas track by $index">
+            <td>{{Venda.id}}</td>
+            <td>{{Venda.valor_total}}</td>
+            <td>{{Venda.detalhes}}</td>
+            <td>{{Venda.status}}</td>
+            <td><a href="" ng-click="excluir(Venda)">excluir</a></td>
+            <td><a href="#!/cadastro_Venda/{{Venda.id}}">editar</a></td>   
+        </tr>
+    </tbody>
+</table>
+
+<a href="#!/cadastro_Venda">Novo</a>

@@ -1,0 +1,28 @@
+<h1>Clientes</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Nome</th>
+            <th>endereço</th>
+            <th>CNPJ</th>
+            <th>Telefone</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="cliente in clientes track by $index">
+            <td>{{cliente.id}}</td>
+            <td>{{cliente.nome}}</td>
+            <td>{{cliente.endereco}}</td>
+            <td>{{cliente.cnpj}}</td>
+            <td>{{cliente.telefone}}</td>
+            <td><a href="" ng-click="excluir(cliente)">excluir</a></td>
+            <td><a href="#!/cadastro_cliente/{{cliente.id}}">editar</a></td>   
+        </tr>
+    </tbody>
+</table>
+
+<a href="#!/cadastro_cliente">Novo</a>

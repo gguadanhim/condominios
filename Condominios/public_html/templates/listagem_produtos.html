@@ -1,0 +1,26 @@
+<h1>Produtos</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Nome</th>
+            <th>Preço de custo</th>
+            <th>Preço de venda</th>
+            <th>Codigo barras</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="produto in produtos track by $index">
+            <td>{{produto.id}}</td>
+            <td>{{produto.nome}}</td>
+            <td>{{produto.preco_custo}}</td>
+            <td>{{produto.preco_venda}}</td>
+            <td>{{produto.codigo_barra}}</td>
+            <td><a href="" ng-click="excluir(produto)">excluir</a></td>
+            <td><a href="#!/cadastro_produto/{{produto.id}}">editar</a></td>   
+        </tr>
+    </tbody>
+</table>
+
+<a href="#!/cadastro_produto">Novo</a>

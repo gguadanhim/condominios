@@ -1,0 +1,22 @@
+<h1>Produto</h1>
+
+<form> 
+    <label for="codigo">Código :</label>
+    <input id="id" name="id" type="text" ng-model="produto.id"/>
+    <br>
+    <label for="nome">Nome :</label>
+    <input id="nome" name="nome" type="text" ng-model="produto.nome"/>
+    <br>
+    <label for="preco_venda">Preço venda :</label>
+    <input id="preco_venda" name="preco_venda" type="text" ng-model="produto.preco_venda"/>
+    <br>
+    <label for="preco_custo">Preço custo :</label>
+    <input id="preco_custo" name="preco_custo" type="text" ng-model="produto.preco_custo"/>
+    <br>
+    <label for="codigo_barra">Códido de barras :</label>
+    <input id="codigo_barra" name="codigo_barra" type="text" ng-model="produto.codigo_barra"/>
+    <br>
+    <button ng-click="salvar(produto)">Salvar</button>
+    <br>
+    <button ng-click="cancelar(produto)">Cancelar</button>
+</form>

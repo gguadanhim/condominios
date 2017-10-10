@@ -1,0 +1,19 @@
+<h1>Venda</h1>
+
+<form> 
+    <label for="codigo">Código :</label>
+    <input id="id" name="id" type="text" ng-model="Vendas.id"/>
+    <br>
+    <label for="valor_total">Valor total :</label>
+    <input id="valor_total" name="valor_total" type="text" ng-model="Vendas.valor_total"/>
+    <br>
+    <label for="detalhes">Detalhes :</label>
+    <input id="detalhes" name="detalhes" type="text" ng-model="Vendas.detalhes"/>
+    <br>
+    <label for="status">Status :</label>
+    <input id="status" name="status" type="text" ng-model="Vendas.status"/>
+    <br>
+    <button ng-click="salvar(Vendas)">Salvar</button>
+    <br>
+    <button ng-click="cancelar(Vendas)">Cancelar</button>
+</form>

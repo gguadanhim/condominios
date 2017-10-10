@@ -1,0 +1,22 @@
+<h1>Fornecedores</h1>
+
+<form> 
+    <label for="codigo">Código :</label>
+    <input id="id" name="id" type="text" ng-model="Fornecedores.id"/>
+    <br>
+    <label for="nome">Nome :</label>
+    <input id="nome" name="nome" type="text" ng-model="Fornecedores.nome"/>
+    <br>
+    <label for="endereco">Endereço:</label>
+    <input id="endereco" name="endereco" type="text" ng-model="Fornecedores.endereco"/>
+    <br>
+    <label for="telefone">Telefone:</label>
+    <input id="telefone" name="telefone" type="text" ng-model="Fornecedores.telefone"/>
+    <br>
+    <label for="cnpj">CNPJ:</label>
+    <input id="cnpj" name="cnpj" type="text" ng-model="Fornecedores.cnpj"/>
+    <br>
+    <button ng-click="salvar(Fornecedores)">Salvar</button>
+    <br>
+    <button ng-click="cancelar(Fornecedores)">Cancelar</button>
+</form>
