@@ -10,7 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -42,6 +44,10 @@ public class usuario implements Serializable {
         this.nome = anome;
     }
 
+    @ManyToOne
+    private empresa iEmpresa;
+    
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -65,6 +71,21 @@ public class usuario implements Serializable {
     @Override
     public String toString() {
         return "model.usuario[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the iEmpresa
+     */
+    @XmlTransient
+    public empresa getEmpresa() {
+        return iEmpresa;
+    }
+
+    /**
+     * @param iEmpresa the iEmpresa to set
+     */
+    public void setEmpresa(empresa iEmpresa) {
+        this.iEmpresa = iEmpresa;
     }
     
 }

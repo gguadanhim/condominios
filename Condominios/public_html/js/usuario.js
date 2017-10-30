@@ -11,7 +11,7 @@ app.config(function($routeProvider){
     $routeProvider.when('/cadastro_usuario',{
         controller: 'CadastroUsuarioControler',
         templateUrl : 'templates/cadastro_usuario.html'
-    }).when('/cadastro_usuario/:id',{
+    }).when('/cadastro_usuario/:id/model.usuario/:id',{
         controller: 'CadastroUsuarioControler',
         templateUrl : 'templates/cadastro_usuario.html'
     }).when('/listagem_usuario',{
@@ -67,17 +67,33 @@ app.config(function($routeProvider){
     }).when('/listagem_Venda',{
         controller: 'ListagemVendaControler',
         templateUrl : 'templates/listagem_Venda.html'
+    
+   
+    }).when('/cadastro_empresa',{
+        controller: 'CadastroempresaControler',
+        templateUrl : 'templates/cadastro_empresa.html'    
+    }).when('/cadastro_empresa/:id',{
+        controller: 'CadastroempresaControler',
+        templateUrl : 'templates/cadastro_empresa.html'
+    }).when('/listagem_empresa',{
+        controller: 'ListagemempresaControler',
+        templateUrl : 'templates/listagem_empresa.html'
+     
+     
         
     }).otherwise('/listagem_usuario');
 });
 
-
+var empresa = {"cnpj":"1","endereco":"1","id":1,"nome":"1","telefone":"1"};
+   
 app.controller('ListagemUsuarioControler',function($scope,usuariosService){
+    
     listarUsuarios();
 
     function listarUsuarios(){
         usuariosService.getUsuarios().then(function(usuarios){
             $scope.usuarios = usuarios;
+            $scope.empresa = empresa;
         });
     };
     
@@ -89,6 +105,7 @@ app.controller('ListagemUsuarioControler',function($scope,usuariosService){
 });
 app.controller('CadastroUsuarioControler',function($routeParams,$scope,$location,usuariosService){
     var id = $routeParams.id;
+    $scope.empresa = empresa;
     
     if(id){
         usuariosService.getUsuario(id).then(function(usuarios){
@@ -111,23 +128,20 @@ app.controller('CadastroUsuarioControler',function($routeParams,$scope,$location
     };
 });
 app.service('usuariosService',function(UsuariosResource) {
-
-
     this.getUsuario = function(id) {
-        return UsuariosResource.get({id:id}).$promise;
+        return UsuariosResource.BuscarUsuario({id:empresa.id},{id:id}).$promise;
     };
 
     this.getUsuarios = function() {
-        return UsuariosResource.query().$promise;
+        return UsuariosResource.BuscarUsuarios({id : empresa.id}).$promise;
     };
 
-    this.salvarUsuario = function(usuario) {
+    this.salvarUsuario = function(empresa,usuario) {
         if (usuario.id){            
             return UsuariosResource.update({id : usuario.id},usuario).$promise;
         }else{
-            return UsuariosResource.save(usuario).$promise;
+            return UsuariosResource.adicionarUsuario({id : empresa.idempresa},usuario).$promise;
         }
-
     };
 
     this.excluir = function(usuario) {
@@ -135,10 +149,37 @@ app.service('usuariosService',function(UsuariosResource) {
     };  
 });
 app.factory('UsuariosResource',function($resource){
-         return $resource('http://localhost:8084/condominio_backend/webresources/model.usuario/:id',{},{
+         var Url = 'http://localhost:8084/condominio_backend/webresources/model.empresa/:id';
+         return $resource(Url,{},{
                     update:{
                         method:'PUT'
-                    }})
+                    },
+                    adicionarUsuario:{
+                        method:'POST',
+                        url: Url + '/model.usuario',
+                        params:{
+                            id:'@id'
+                        }
+                    },
+                    BuscarUsuarios:{
+                        method:'GET',
+                        isArray:true,
+                        url: Url + '/model.usuario',
+                        params:{
+                            id:'@id'
+                        }
+                    },
+                    BuscarUsuario:{
+                        method:'GET',
+                        isArray:false,
+                        url: Url + '/model.usuario/:id',
+                        params:{
+                            id:'@id',
+                            id:'@id'
+                        }
+                    }
+                
+    })
 });
 
 
@@ -486,3 +527,74 @@ app.factory('VendaResource',function($resource){
                         method:'PUT'
                     }})
 });
+
+
+app.controller('ListagemempresaControler',function($scope,empresaservice){
+    listarempresas();
+
+    function listarempresas(){
+        empresaservice.getempresas().then(function(empresas){
+            $scope.empresas = empresas;
+        });
+    };
+    
+    $scope.excluir = function(empresa) {
+        empresaservice.excluir(empresa).then(function(){
+            listarempresas();
+        });
+    };
+});
+app.controller('CadastroempresaControler',function($routeParams,$scope,$location,empresaservice){
+    var id = $routeParams.id;
+    
+    if(id){
+        empresaservice.getempresa(id).then(function(empresas){
+            $scope.empresas = empresas;
+        });
+    }else{
+        $scope.empresas = {};
+    }
+    
+    $scope.salvar = function(empresa) {
+        empresaservice.salvarempresa(empresa).then(function(){
+            $location.path('listagem_empresa');
+        });
+        $scope.empresas = {};
+    };
+
+    $scope.cancelar = function(empresa) {
+        $scope.empresas = {};
+        $location.path('listagem_empresa');
+    };
+});
+app.service('empresaservice',function(empresaResource) {
+
+    this.getempresa = function(id) {
+        return empresaResource.get({id:id}).$promise;
+    };
+
+    this.getempresas = function() {
+        return empresaResource.query().$promise;
+    };
+
+    this.salvarempresa = function(empresa) {
+        if (empresa.id){            
+            return empresaResource.update({id : empresa.id},empresa).$promise;
+        }else{
+            return empresaResource.save(empresa).$promise;
+        }
+
+    };
+
+    this.excluir = function(empresa) {
+        return empresaResource.delete({id : empresa.id}).$promise;
+    };  
+});
+app.factory('empresaResource',function($resource){
+         return $resource('http://localhost:8084/condominio_backend/webresources/model.empresa/:id',{},{
+                    update:{
+                        method:'PUT'
+                    }})
+});
+
+

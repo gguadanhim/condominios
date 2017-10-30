@@ -1,0 +1,28 @@
+<h1>Empresas</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Nome</th>
+            <th>endereço</th>
+            <th>CNPJ</th>
+            <th>Telefone</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="empresa in empresas track by $index">
+            <td>{{empresa.id}}</td>
+            <td>{{empresa.nome}}</td>
+            <td>{{empresa.endereco}}</td>
+            <td>{{empresa.cnpj}}</td>
+            <td>{{empresa.telefone}}</td>
+            <td><a href="" ng-click="excluir(empresa)">excluir</a></td>
+            <td><a href="#!/cadastro_empresa/{{empresa.id}}">editar</a></td>   
+        </tr>
+    </tbody>
+</table>
+
+<a href="#!/cadastro_empresa">Novo</a>

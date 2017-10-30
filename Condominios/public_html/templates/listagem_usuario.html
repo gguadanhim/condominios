@@ -13,8 +13,8 @@
         <tr ng-repeat="usuario in usuarios track by $index">
             <td>{{usuario.id}}</td>
             <td>{{usuario.nome}}</td>
-            <td><a href="" ng-click="excluir(usuario)">excluir</a></td>
-            <td><a href="#!/cadastro_usuario/{{usuario.id}}">editar</a></td>   
+            <td><a href="" ng-click="excluir(empresa,usuario)">excluir</a></td>
+            <td><a href="#!/cadastro_usuario/{{empresa.id}}/model.usuario/{{usuario.id}}">editar</a></td>   
         </tr>
     </tbody>
 </table>
