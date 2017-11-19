@@ -11,7 +11,7 @@ app.config(function($routeProvider){
     $routeProvider.when('/cadastro_usuario',{
         controller: 'CadastroUsuarioControler',
         templateUrl : 'templates/cadastro_usuario.html'
-    }).when('/cadastro_usuario/:id/model.usuario/:id',{
+    }).when('/cadastro_usuario/:id/model.usuario/:idusuario',{
         controller: 'CadastroUsuarioControler',
         templateUrl : 'templates/cadastro_usuario.html'
     }).when('/listagem_usuario',{
@@ -104,7 +104,7 @@ app.controller('ListagemUsuarioControler',function($scope,usuariosService){
     };
 });
 app.controller('CadastroUsuarioControler',function($routeParams,$scope,$location,usuariosService){
-    var id = $routeParams.id;
+    var id = $routeParams.idusuario;
     $scope.empresa = empresa;
     
     if(id){
@@ -129,30 +129,35 @@ app.controller('CadastroUsuarioControler',function($routeParams,$scope,$location
 });
 app.service('usuariosService',function(UsuariosResource) {
     this.getUsuario = function(id) {
-        return UsuariosResource.BuscarUsuario({id:empresa.id},{id:id}).$promise;
+        return UsuariosResource.BuscarUsuario({id:empresa.id},{idusuario:id}).$promise;
     };
 
     this.getUsuarios = function() {
         return UsuariosResource.BuscarUsuarios({id : empresa.id}).$promise;
     };
 
-    this.salvarUsuario = function(empresa,usuario) {
+    this.salvarUsuario = function(usuario) {
         if (usuario.id){            
-            return UsuariosResource.update({id : usuario.id},usuario).$promise;
+            return UsuariosResource.AtualizarUsuario({id : empresa.id, idusuario : usuario.id}, usuario).$promise;
         }else{
-            return UsuariosResource.adicionarUsuario({id : empresa.idempresa},usuario).$promise;
+            return UsuariosResource.adicionarUsuario({id : empresa.id},usuario).$promise;
         }
     };
 
     this.excluir = function(usuario) {
-        return UsuariosResource.delete({id : usuario.id}).$promise;
+        return UsuariosResource.ApagarUsuario({id : empresa.id} , {idusuario : usuario.id}).$promise;
     };  
 });
 app.factory('UsuariosResource',function($resource){
          var Url = 'http://localhost:8084/condominio_backend/webresources/model.empresa/:id';
          return $resource(Url,{},{
-                    update:{
-                        method:'PUT'
+                    AtualizarUsuario:{
+                        method:'PUT',
+                        url: Url + '/model.usuario/:idusuario',
+                        params:{
+                            id:'@id',
+                            idusuario:'@idusuario'
+                        }
                     },
                     adicionarUsuario:{
                         method:'POST',
@@ -172,13 +177,20 @@ app.factory('UsuariosResource',function($resource){
                     BuscarUsuario:{
                         method:'GET',
                         isArray:false,
-                        url: Url + '/model.usuario/:id',
+                        url: Url + '/model.usuario/:idusuario',
                         params:{
                             id:'@id',
-                            id:'@id'
+                            idusuario:'@idusuario'
+                        }
+                    },
+                    ApagarUsuario:{
+                        method:'DELETE',
+                        url: Url + '/model.usuario/:idusuario',
+                        params:{
+                            id:'@id',
+                            idusuario:'@idusuario'
                         }
                     }
-                
     })
 });
 
@@ -598,3 +610,18 @@ app.factory('empresaResource',function($resource){
 });
 
 
+app.config(function ($httpProvider){
+   $httpProvider.interceptors.push('InterceptorToken'); 
+});
+
+app.factory("InterceptorToken",function(){
+   return {
+     request: function(config){
+         //config.headers['teste'] = "ttt" ;
+         //config.headers['Access-Control-Allow-Origin'] = "*";
+         config.headers['Authorization'] = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJ0ZXN0ZSIsImlhdCI6MTUxMTEyMDU3OSwiZXhwIjowfQ.Waxlaq_lWXZ6d-1DB0PP8pDrpS9P_UIgHMa7a5D3W4xUz9e7KaxrmHe8w9T3QYFs1WrmjIUdOI5BOA9QfuCMrQ";
+         //alert('aquii');
+         return config;
+     }
+   };
+});

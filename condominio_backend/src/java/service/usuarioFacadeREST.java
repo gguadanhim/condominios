@@ -5,20 +5,34 @@
  */
 package service;
 
+//import com.sun.org.apache.xml.internal.security.algorithms.SignatureAlgorithm;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import java.security.Key;
+//import java.awt.RenderingHints.Key;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
+import javax.crypto.KeyGenerator;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import static javax.ws.rs.Priorities.AUTHORIZATION;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
+import javax.ws.rs.core.Response;
+import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 import model.usuario;
 
 /**
@@ -104,4 +118,46 @@ public class usuarioFacadeREST extends AbstractFacade<usuario> {
         return em;
     }
     
+    //@Inject
+    //private KeyGenerator keyGenerator;
+    
+    @POST
+    @Path("/login")
+    @Consumes({ MediaType.APPLICATION_JSON})    
+//@Consumes(APPLICATION_FORM_URLENCODED)
+    //public Response authenticateUser(@FormParam("login") String login,
+    //                                 @FormParam("password") String password) {
+    
+    public Response authenticateUser(usuario dados) {  
+    try {
+ 
+            // Authenticate the user using the credentials provided
+            
+            //authenticate(login, password);
+ 
+            // Issue a token for the user
+            String token = issueToken(dados.getNome());
+ 
+            // Return the token on the response
+            return Response.ok(token).build();
+            //return Response.ok().header("TOKEN", "Bearer " + token).build();
+ 
+        } catch (Exception e) {
+            return Response.status(UNAUTHORIZED).build();
+        }
+    }
+    
+    private String issueToken(String login) {
+        String jwtToken ="";
+        Date ll = new Date(1);
+        jwtToken = Jwts.builder()
+                .setSubject(login)
+                .setIssuer("teste")
+                .setIssuedAt(new Date())
+                .setExpiration( ll)
+                .signWith(SignatureAlgorithm.HS512, "chave")
+                .compact();
+        
+        return jwtToken;
+}
 }

@@ -29,6 +29,9 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(configuracao.HttpMethodOverrideEnabler.class);
+        resources.add(configuracao.NewCrossOriginResourceSharingFilter.class);
+        resources.add(service.JWTTokenNeededFilter.class);
         resources.add(service.clienteFacadeREST.class);
         resources.add(service.empresaFacadeREST.class);
         resources.add(service.fornecedorFacadeREST.class);

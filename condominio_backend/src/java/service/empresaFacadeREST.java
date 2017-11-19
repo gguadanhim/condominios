@@ -116,13 +116,47 @@ public class empresaFacadeREST extends AbstractFacade<empresa> {
     @Path("{id}/model.usuario")
     public List<usuario> BuscarUsuarios(@PathParam("id") Long id){
         empresa lEmpresa = super.find(id);
-        return lEmpresa.getUsuario();
+        //empresa lEmpresa = getEntityManager().find(empresa.class,id);
+        List<usuario> ll;
+        ll = lEmpresa.getUsuario();
+        return ll; 
     }
     
     @GET
-    @Path("{id}/model.usuario/{id}")
-    public usuario BuscarUsuario(@PathParam("id") Long id,@PathParam("id") int idUsuario){
+    @Path("{id}/model.usuario/{idusuario}")
+    public usuario BuscarUsuario(@PathParam("id") Long id,@PathParam("idusuario") int idUsuario){
+        usuarioFacadeREST ll = new usuarioFacadeREST();
+        usuario lUsuario;
+        lUsuario = ll.find(Long.valueOf(idUsuario));
+        
+        return lUsuario;
+    }
+    @DELETE
+    @Path("{id}/model.usuario/{idusuario}")
+    public int ApagarUsuario(@PathParam("id") Long id,@PathParam("idusuario") Long idUsuario){
         empresa lEmpresa = super.find(id);
-        return lEmpresa.getUsuario().get(idUsuario);
+        usuario lUsuario = this.getUsuario(idUsuario);
+        getEntityManager().remove(lUsuario);
+        lEmpresa.getUsuario().remove(lUsuario);
+        
+        getEntityManager().getTransaction().begin();
+        getEntityManager().getTransaction().commit();
+        return 1;
+    }
+    
+    public usuario getUsuario(long aiUsuario){
+        usuario lUsuario;
+        lUsuario = getEntityManager().find(usuario.class, aiUsuario);
+        return lUsuario;
+    }
+    
+    @PUT
+    @Path("{id}/model.usuario/{idusuario}")
+    public void EditarUsuario(@PathParam("id") Long id, @PathParam("idusuario") Long idUsuario, usuario u) {
+         empresa lEmpresa = super.find(id);
+         u.setEmpresa(lEmpresa);
+         getEntityManager().merge(u);
+        em.getTransaction().begin();
+        em.getTransaction().commit();
     }
 }
