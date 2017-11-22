@@ -6,6 +6,8 @@
 
 var app = angular.module('usuarioApp',['ngRoute','ngResource']);
 
+var token = '';
+
 app.config(function($routeProvider){
     
     $routeProvider.when('/cadastro_usuario',{
@@ -78,10 +80,12 @@ app.config(function($routeProvider){
     }).when('/listagem_empresa',{
         controller: 'ListagemempresaControler',
         templateUrl : 'templates/listagem_empresa.html'
-     
-     
         
-    }).otherwise('/listagem_usuario');
+     }).when('/login',{
+        controller: 'LoginControler',
+        templateUrl : 'login.html'
+        
+    }).otherwise('/login');
 });
 
 var empresa = {"cnpj":"1","endereco":"1","id":1,"nome":"1","telefone":"1"};
@@ -610,18 +614,44 @@ app.factory('empresaResource',function($resource){
 });
 
 
+app.controller('LoginControler',function($scope, $http){
+    
+    $scope.SendData = function () {
+        var config = {
+            headers : {
+                'Content-Type': 'application/json;charset=utf-8;'
+            }
+        }
+
+        $http.post('http://localhost:8084/condominio_backend/webresources/model.usuario/login', $scope.user, config)
+        .then(function successCallback(response) {
+            token = response.data;
+
+        }, function errorCallback(response) {
+            alert('erro');
+            $scope.PostDataResponse = "Data: " + data +
+                "<hr />status: " + status +
+                "<hr />headers: " + header +
+                "<hr />config: " + config;
+        });
+    };
+});
+
+
 app.config(function ($httpProvider){
    $httpProvider.interceptors.push('InterceptorToken'); 
 });
 
-app.factory("InterceptorToken",function(){
+app.factory("InterceptorToken",function($location){
    return {
      request: function(config){
-         //config.headers['teste'] = "ttt" ;
-         //config.headers['Access-Control-Allow-Origin'] = "*";
-         config.headers['Authorization'] = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJ0ZXN0ZSIsImlhdCI6MTUxMTEyMDU3OSwiZXhwIjowfQ.Waxlaq_lWXZ6d-1DB0PP8pDrpS9P_UIgHMa7a5D3W4xUz9e7KaxrmHe8w9T3QYFs1WrmjIUdOI5BOA9QfuCMrQ";
-         //alert('aquii');
+         config.headers['Authorization'] = token;
          return config;
-     }
+     },
+     responseError: function(response) {
+      if (response.status === 401 || response.status === 403) {
+        $location.path('/login');
+      }
+    }
    };
 });

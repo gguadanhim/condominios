@@ -9,11 +9,15 @@ package service;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.security.Key;
+import java.time.LocalDate;
 //import java.awt.RenderingHints.Key;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.crypto.KeyGenerator;
+import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -33,6 +37,7 @@ import javax.ws.rs.core.MediaType;
 import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
 import javax.ws.rs.core.Response;
 import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
+import javax.xml.bind.DatatypeConverter;
 import model.usuario;
 
 /**
@@ -124,40 +129,65 @@ public class usuarioFacadeREST extends AbstractFacade<usuario> {
     @POST
     @Path("/login")
     @Consumes({ MediaType.APPLICATION_JSON})    
-//@Consumes(APPLICATION_FORM_URLENCODED)
-    //public Response authenticateUser(@FormParam("login") String login,
-    //                                 @FormParam("password") String password) {
-    
     public Response authenticateUser(usuario dados) {  
-    try {
- 
-            // Authenticate the user using the credentials provided
-            
-            //authenticate(login, password);
- 
-            // Issue a token for the user
-            String token = issueToken(dados.getNome());
- 
-            // Return the token on the response
+        try {
+            String token = "";
+            usuario lusuario;
+            lusuario = this.burcarUsuarioSenha(dados);
+            if(lusuario != null){
+                 token = issueToken(dados.getLogin(),lusuario.getEmpresa().getId());
+            }
+
             return Response.ok(token).build();
-            //return Response.ok().header("TOKEN", "Bearer " + token).build();
- 
+        
         } catch (Exception e) {
             return Response.status(UNAUTHORIZED).build();
         }
     }
     
-    private String issueToken(String login) {
+    private usuario burcarUsuarioSenha(usuario a){
+        boolean lbValidou = false;
+        List<usuario> lUsuarios;
+        usuario lUsuario = null;
+        
+        lUsuarios = this.findAll();
+        
+        for (int i = 0; i < lUsuarios.size(); i++) {
+            if(lUsuarios.get(i).getLogin() != null){
+                if(lUsuarios.get(i).getLogin().equals(a.getLogin()) ){
+                    lUsuario = lUsuarios.get(i);
+                    break;
+                }
+            }
+        }
+        
+        if(lUsuario.getSenha().equals(a.getSenha())){
+            lbValidou = true;
+        }else{
+            lUsuario = null;
+        }
+        
+        return lUsuario;
+    }
+    
+    private String issueToken(String login,long empresaId) {
         String jwtToken ="";
-        Date ll = new Date(1);
+        
+        Date ll2  = new Date();
+        
+        Date ll = new Date(ll2.getTime() + 30 * 60 * 1000);
+        
+        //byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary("chave");
+        //Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
+        
         jwtToken = Jwts.builder()
                 .setSubject(login)
-                .setIssuer("teste")
+                .setIssuer(Long.toString(empresaId))
                 .setIssuedAt(new Date())
-                .setExpiration( ll)
+                .setExpiration(ll)
                 .signWith(SignatureAlgorithm.HS512, "chave")
                 .compact();
         
         return jwtToken;
-}
+    }
 }

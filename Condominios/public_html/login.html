@@ -7,40 +7,8 @@
     <script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/principal.css">
 </head>
-<body ng-app="usuarioApp" ng-controller="postController">
-
- <script>
-    // Defining angularjs application.
-    var postApp = angular.module('usuarioApp', []);
-    // Controller function and passing $http service and $scope var.
-    postApp.controller('postController', function($scope, $http) {
-      // create a blank object to handle form data.
-      
-      
-        $scope.SendData = function () {
-            var config = {
-                headers : {
-                    'Content-Type': 'application/json;charset=utf-8;'
-                }
-            }
-
-            $http.post('http://localhost:8084/condominio_backend/webresources/model.usuario/login', $scope.user, config)
-            .success(function (data, status, headers, config) {
-                $scope.TOKEN = data;
-            })
-            .error(function (data, status, header, config) {
-                alert('erro');
-                $scope.PostDataResponse = "Data: " + data +
-                    "<hr />status: " + status +
-                    "<hr />headers: " + header +
-                    "<hr />config: " + config;
-            });
-        };
-      
-
-    });
-</script>
-    
+<body ng-app="usuarioApp">
+   
 <div class="container">
 <div class="col-sm-8 col-sm-offset-2">
     <div class="page-header"><h1>Post data using angularJS</h1></div>
