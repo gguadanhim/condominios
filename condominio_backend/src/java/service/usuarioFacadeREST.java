@@ -132,13 +132,24 @@ public class usuarioFacadeREST extends AbstractFacade<usuario> {
     public Response authenticateUser(usuario dados) {  
         try {
             String token = "";
+            String lsRetorno = "";
+            long llCodigoEmpresa = 0;
             usuario lusuario;
+            
             lusuario = this.burcarUsuarioSenha(dados);
+            
+            llCodigoEmpresa = lusuario.getEmpresa().getId();
+            
             if(lusuario != null){
-                 token = issueToken(dados.getLogin(),lusuario.getEmpresa().getId());
+                 token = issueToken(dados.getLogin(),llCodigoEmpresa);
             }
+            
+            lsRetorno = "{\n" +
+                        "  \"token\": \""+token+"\",\n" +
+                        "  \"empresa\": "+Long.toString(llCodigoEmpresa)+"\n" +
+                        "}";
 
-            return Response.ok(token).build();
+            return Response.ok(lsRetorno).build();
         
         } catch (Exception e) {
             return Response.status(UNAUTHORIZED).build();
@@ -146,7 +157,6 @@ public class usuarioFacadeREST extends AbstractFacade<usuario> {
     }
     
     private usuario burcarUsuarioSenha(usuario a){
-        boolean lbValidou = false;
         List<usuario> lUsuarios;
         usuario lUsuario = null;
         
@@ -161,9 +171,7 @@ public class usuarioFacadeREST extends AbstractFacade<usuario> {
             }
         }
         
-        if(lUsuario.getSenha().equals(a.getSenha())){
-            lbValidou = true;
-        }else{
+        if(!lUsuario.getSenha().equals(a.getSenha())){
             lUsuario = null;
         }
         
@@ -176,10 +184,7 @@ public class usuarioFacadeREST extends AbstractFacade<usuario> {
         Date ll2  = new Date();
         
         Date ll = new Date(ll2.getTime() + 30 * 60 * 1000);
-        
-        //byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary("chave");
-        //Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
-        
+                
         jwtToken = Jwts.builder()
                 .setSubject(login)
                 .setIssuer(Long.toString(empresaId))

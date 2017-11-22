@@ -7,7 +7,8 @@
 var app = angular.module('usuarioApp',['ngRoute','ngResource']);
 
 var token = '';
-
+var empresa = {};
+   
 app.config(function($routeProvider){
     
     $routeProvider.when('/cadastro_usuario',{
@@ -88,8 +89,7 @@ app.config(function($routeProvider){
     }).otherwise('/login');
 });
 
-var empresa = {"cnpj":"1","endereco":"1","id":1,"nome":"1","telefone":"1"};
-   
+
 app.controller('ListagemUsuarioControler',function($scope,usuariosService){
     
     listarUsuarios();
@@ -625,7 +625,8 @@ app.controller('LoginControler',function($scope, $http){
 
         $http.post('http://localhost:8084/condominio_backend/webresources/model.usuario/login', $scope.user, config)
         .then(function successCallback(response) {
-            token = response.data;
+            token = response.data.token;
+            empresa.id = response.data.empresa;
 
         }, function errorCallback(response) {
             alert('erro');
@@ -646,6 +647,7 @@ app.factory("InterceptorToken",function($location){
    return {
      request: function(config){
          config.headers['Authorization'] = token;
+         config.headers['empresa'] = empresa.id;
          return config;
      },
      responseError: function(response) {

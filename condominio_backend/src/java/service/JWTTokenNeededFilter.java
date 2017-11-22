@@ -10,10 +10,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import java.io.IOException;
-import javax.annotation.Priority;
-import javax.crypto.KeyGenerator;
-import javax.inject.Inject;
-import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
@@ -27,7 +23,6 @@ public class JWTTokenNeededFilter implements ContainerRequestFilter {
     public void filter(ContainerRequestContext requestContext) throws IOException {
         String token = "";
         String lsPath = "";
-        KeyGenerator keyGenerator;
         
         lsPath = requestContext.getUriInfo().getPath();
         
@@ -35,20 +30,25 @@ public class JWTTokenNeededFilter implements ContainerRequestFilter {
 
             try {
                 String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
+                
+                String lsEmpresa = requestContext.getHeaderString("empresa");
 
-                token = authorizationHeader;//.substring("Bearer".length()).trim();
+                token = authorizationHeader;
                 
                 Claims claims = Jwts.parser()         
                     .setSigningKey(DatatypeConverter.parseBase64Binary("chave"))
                     .parseClaimsJws(token).getBody();
                 
-                 System.out.println("ID: " + claims.getId());
-                 System.out.println("Subject: " + claims.getSubject());
-                 System.out.println("Issuer: " + claims.getIssuer());
-                 System.out.println("Expiration: " + claims.getExpiration());
-                
-                System.out.println("#### valid token : " + token);
+                if(lsEmpresa.equals(claims.getIssuer())){
+                    System.out.println("ID: " + claims.getId());
+                    System.out.println("Subject: " + claims.getSubject());
+                    System.out.println("Issuer: " + claims.getIssuer());
+                    System.out.println("Expiration: " + claims.getExpiration());
 
+                   System.out.println("#### valid token : " + token);
+                }else{
+                    requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
+                }
             }catch(MalformedJwtException e){
                 System.out.println("#### invalid token : " + token);
                 requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
