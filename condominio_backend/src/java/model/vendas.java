@@ -40,7 +40,7 @@ public class vendas implements Serializable{
     
     private int status;
     
-    @OneToMany(mappedBy = "iVenda",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "iVendas",cascade = CascadeType.PERSIST)
     private List<itens_venda> iItensVenda;
 
     @ManyToOne

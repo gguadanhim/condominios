@@ -44,19 +44,19 @@ public class empresa implements Serializable{
     @OneToMany(mappedBy = "iEmpresa",cascade = CascadeType.PERSIST)
     private List<usuario> iUsuario;
     
-    @OneToMany(mappedBy = "iCliente",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "iEmpresa",cascade = CascadeType.PERSIST)
     private List<cliente> iCliente;
     
-    @OneToMany(mappedBy = "iFornecedor",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "iEmpresa",cascade = CascadeType.PERSIST)
     private List<fornecedor> iFornecedor;
     
-    @OneToMany(mappedBy = "iPedido",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "iEmpresa",cascade = CascadeType.PERSIST)
     private List<pedidos> iPedido;
     
-    @OneToMany(mappedBy = "iProduto",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "iEmpresa",cascade = CascadeType.PERSIST)
     private List<produtos> iProduto;
     
-    @OneToMany(mappedBy = "iVenda",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "iEmpresa",cascade = CascadeType.PERSIST)
     private List<vendas> iVenda;
     
     /**
