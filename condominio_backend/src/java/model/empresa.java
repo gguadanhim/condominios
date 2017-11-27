@@ -43,6 +43,22 @@ public class empresa implements Serializable{
     
     @OneToMany(mappedBy = "iEmpresa",cascade = CascadeType.PERSIST)
     private List<usuario> iUsuario;
+    
+    @OneToMany(mappedBy = "iCliente",cascade = CascadeType.PERSIST)
+    private List<cliente> iCliente;
+    
+    @OneToMany(mappedBy = "iFornecedor",cascade = CascadeType.PERSIST)
+    private List<fornecedor> iFornecedor;
+    
+    @OneToMany(mappedBy = "iPedido",cascade = CascadeType.PERSIST)
+    private List<pedidos> iPedido;
+    
+    @OneToMany(mappedBy = "iProduto",cascade = CascadeType.PERSIST)
+    private List<produtos> iProduto;
+    
+    @OneToMany(mappedBy = "iVenda",cascade = CascadeType.PERSIST)
+    private List<vendas> iVenda;
+    
     /**
      * @return the id
      */
@@ -126,5 +142,49 @@ public class empresa implements Serializable{
      */
     public void setUsuario(List<usuario> iUsuario) {
         this.iUsuario = iUsuario;
+    }
+    
+    @XmlTransient
+    public List<cliente> getCliente() {
+        return iCliente;
+    }
+    public void setCliente(List<cliente> iCliente) {
+        this.iCliente = iCliente;
+    }
+    
+    @XmlTransient
+    public List<fornecedor> getFornecedor() {
+        return iFornecedor;
+    }
+
+    public void setFornecedor(List<fornecedor> iFornecedor) {
+        this.iFornecedor = iFornecedor;
+    }
+    
+    @XmlTransient
+    public List<pedidos> getPedido() {
+        return iPedido;
+    }
+
+    public void setPedido(List<pedidos> iPedido) {
+        this.iPedido = iPedido;
+    }
+    
+    @XmlTransient
+    public List<produtos> getProduto() {
+        return iProduto;
+    }
+
+    public void setProduto(List<produtos> iProduto) {
+        this.iProduto = iProduto;
+    }
+    
+    @XmlTransient
+    public List<vendas> getVenda() {
+        return iVenda;
+    }
+
+    public void setVenda(List<vendas> iVenda) {
+        this.iVenda = iVenda;
     }
 }

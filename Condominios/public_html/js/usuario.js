@@ -8,7 +8,7 @@ var app = angular.module('usuarioApp',['ngRoute','ngResource']);
 
 var token = '';
 var empresa = {};
-   
+
 app.config(function($routeProvider){
     
     $routeProvider.when('/cadastro_usuario',{
@@ -85,6 +85,12 @@ app.config(function($routeProvider){
      }).when('/login',{
         controller: 'LoginControler',
         templateUrl : 'login.html'
+     }).when('/logof',{
+        controller: 'LogofControler',
+        templateUrl : 'login.html'
+     }).when('/inicio',{
+        controller: 'InicioControler',
+        templateUrl : 'templates/inicio.html'
         
     }).otherwise('/login');
 });
@@ -613,8 +619,21 @@ app.factory('empresaResource',function($resource){
                     }})
 });
 
+app.controller('InicioControler',function($scope, $http, $rootScope,$location){
+    $scope.teste = function () {
+        
+    }
+});
 
-app.controller('LoginControler',function($scope, $http){
+app.controller('LogofControler',function($scope, $http, $rootScope,$location){
+    token = '';
+    empresa.id = 0;
+    $rootScope.currentUserSignedIn = false;
+    
+    $location.path('/login');
+});
+
+app.controller('LoginControler',function($scope, $http, $rootScope,$location){
     
     $scope.SendData = function () {
         var config = {
@@ -627,12 +646,14 @@ app.controller('LoginControler',function($scope, $http){
         .then(function successCallback(response) {
             token = response.data.token;
             empresa.id = response.data.empresa;
-
+            $rootScope.currentUserSignedIn = true;
+            $location.path('/inicio');
+            
         }, function errorCallback(response) {
             alert('erro');
-            $scope.PostDataResponse = "Data: " + data +
-                "<hr />status: " + status +
-                "<hr />headers: " + header +
+            $scope.PostDataResponse = "Data: " + response.data +
+                "<hr />status: " + response.status +
+                "<hr />headers: " + response.header +
                 "<hr />config: " + config;
         });
     };
@@ -643,7 +664,7 @@ app.config(function ($httpProvider){
    $httpProvider.interceptors.push('InterceptorToken'); 
 });
 
-app.factory("InterceptorToken",function($location){
+app.factory("InterceptorToken",function($location,$rootScope){
    return {
      request: function(config){
          config.headers['Authorization'] = token;
@@ -653,6 +674,7 @@ app.factory("InterceptorToken",function($location){
      responseError: function(response) {
       if (response.status === 401 || response.status === 403) {
         $location.path('/login');
+        $rootScope.currentUserSignedIn = false;
       }
     }
    };

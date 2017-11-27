@@ -6,11 +6,16 @@
 package model;
 
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -34,7 +39,35 @@ public class vendas implements Serializable{
     private String detalhes;
     
     private int status;
+    
+    @OneToMany(mappedBy = "iVenda",cascade = CascadeType.PERSIST)
+    private List<itens_venda> iItensVenda;
 
+    @ManyToOne
+    private empresa iEmpresa;
+    
+    @ManyToOne
+    private cliente iCliente;
+    
+    
+    @XmlTransient
+    public cliente getCliente() {
+        return iCliente;
+    }
+    public void setCliente(cliente iCliente) {
+        this.iCliente = iCliente;
+    }
+    
+    
+    @XmlTransient
+    public empresa getEmpresa() {
+        return iEmpresa;
+    }
+    public void setEmpresa(empresa iEmpresa) {
+        this.iEmpresa = iEmpresa;
+    }
+    
+    
     /**
      * @return the id
      */
@@ -103,6 +136,15 @@ public class vendas implements Serializable{
      */
     public void setStatus(int status) {
         this.status = status;
+    }
+    
+    @XmlTransient
+    public List<itens_venda> getItensVenda() {
+        return iItensVenda;
+    }
+
+    public void setItensVenda(List<itens_venda> iItensVenda) {
+        this.iItensVenda = iItensVenda;
     }
     
 }

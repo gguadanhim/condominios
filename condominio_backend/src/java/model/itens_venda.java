@@ -10,7 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -32,6 +34,16 @@ public class itens_venda implements Serializable {
     
     private double quantidade;
 
+    @ManyToOne
+    private vendas iVendas;
+    
+    @XmlTransient
+    public vendas getVenda() {
+        return iVendas;
+    }
+    public void setVenda(vendas iVenda) {
+        this.iVendas = iVendas;
+    }
     /**
      * @return the id
      */

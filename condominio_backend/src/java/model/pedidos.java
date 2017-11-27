@@ -6,11 +6,16 @@
 package model;
 
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -32,6 +37,31 @@ public class pedidos implements Serializable {
             
     private int status;
 
+    
+    @OneToMany(mappedBy = "iPedido",cascade = CascadeType.PERSIST)
+    private List<itens_pedido> iItensPedido;
+    
+    @ManyToOne
+    private empresa iEmpresa;
+
+    @ManyToOne
+    private fornecedor iFornecedor;
+    
+    @XmlTransient
+    public fornecedor getFornecedor() {
+        return iFornecedor;
+    }
+    public void setFornecedor(fornecedor iFornecedor) {
+        this.iFornecedor = iFornecedor;
+    }
+    
+    @XmlTransient
+    public empresa getEmpresa() {
+        return iEmpresa;
+    }
+    public void setEmpresa(empresa iEmpresa) {
+        this.iEmpresa = iEmpresa;
+    }
     /**
      * @return the id
      */
@@ -74,4 +104,12 @@ public class pedidos implements Serializable {
         this.status = status;
     }
     
+    @XmlTransient
+    public List<itens_pedido> getItensPedido() {
+        return iItensPedido;
+    }
+
+    public void setItensPedido(List<itens_pedido> iItensPedido) {
+        this.iItensPedido = iItensPedido;
+    }
 }

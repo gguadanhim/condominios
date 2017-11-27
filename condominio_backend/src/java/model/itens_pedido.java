@@ -10,7 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -32,6 +34,16 @@ public class itens_pedido implements Serializable {
     
     private double valor_unitario;
 
+    @ManyToOne
+    private pedidos iPedido;
+    
+    @XmlTransient
+    public pedidos getPedido() {
+        return iPedido;
+    }
+    public void setPedido(pedidos iPedido) {
+        this.iPedido = iPedido;
+    }
     /**
      * @return the id
      */

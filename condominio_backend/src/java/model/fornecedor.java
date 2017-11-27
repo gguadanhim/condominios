@@ -6,11 +6,16 @@
 package model;
 
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -33,7 +38,23 @@ public class fornecedor implements Serializable {
     private String telefone;
     
     private String cnpj;
+    
+    @OneToMany(mappedBy = "iFornecedor",cascade = CascadeType.PERSIST)
+    private List<pedidos> iPedidos;
+    
+    @ManyToOne
+    private empresa iEmpresa;
+    
+    
+    @XmlTransient
+    public List<pedidos> getPedidos() {
+        return iPedidos;
+    }
 
+    public void setPedidos(List<pedidos> iPedidos) {
+        this.iPedidos = iPedidos;
+    }
+    
     /**
      * @return the id
      */
@@ -103,6 +124,14 @@ public class fornecedor implements Serializable {
      */
     public void setCnpj(String cnpj) {
         this.cnpj = cnpj;
+    }
+    
+    @XmlTransient
+    public empresa getEmpresa() {
+        return iEmpresa;
+    }
+    public void setEmpresa(empresa iEmpresa) {
+        this.iEmpresa = iEmpresa;
     }
     
 }
