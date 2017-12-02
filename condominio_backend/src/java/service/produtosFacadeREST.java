@@ -19,6 +19,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import model.empresa;
 import model.produtos;
 
 /**
@@ -38,44 +39,58 @@ public class produtosFacadeREST extends AbstractFacade<produtos> {
     }
 
     @POST
-    @Override
+    @Path("{idempresa}/produto")
     @Consumes({MediaType.APPLICATION_JSON})
-    public int create(produtos entity) {
-        super.create(entity);
+    public int create(@PathParam("idempresa") Long id, produtos entity) {
+        empresa lEmpresa = this.getEmpresa(id);
+        entity.setEmpresa(lEmpresa);
+        lEmpresa.getProduto().add(entity);
         em.getTransaction().begin();
         em.getTransaction().commit();
         return 1;
     }
 
     @PUT
-    @Path("{id}")
+    @Path("{idempresa}/produto/{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") Long id, produtos entity) {
-        super.edit(entity);
+    public void edit(@PathParam("idempresa") Long idempresa, @PathParam("id") Long id, produtos entity) {
+        empresa lEmpresa = this.getEmpresa(idempresa);
+         entity.setEmpresa(lEmpresa);
+         getEntityManager().merge(entity);
         em.getTransaction().begin();
         em.getTransaction().commit();
     }
 
     @DELETE
-    @Path("{id}")
-    public void remove(@PathParam("id") Long id) {
-        super.remove(super.find(id));
+    @Path("{idempresa}/produto/{id}")
+    public void remove(@PathParam("idempresa") Long idempresa, @PathParam("id") Long id) {
+        produtos lProduto;
+        lProduto = getEntityManager().find(produtos.class,id);
+        super.remove(lProduto);
+        this.getEmpresa(idempresa).getProduto().remove(lProduto);
+        
         em.getTransaction().begin();
         em.getTransaction().commit();
     }
 
     @GET
-    @Path("{id}")
+    @Path("{idempresa}/produto/{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public produtos find(@PathParam("id") Long id) {
-        return super.find(id);
+    public produtos find(@PathParam("idempresa") Long idempresa,@PathParam("id") Long id) {
+        return this.getProduto(id);
+    }
+    
+    public produtos getProduto(long aiProduto){
+        produtos lProduto;
+        lProduto = getEntityManager().find(produtos.class, aiProduto );
+        return lProduto;
     }
 
     @GET
-    @Override
+    @Path("{idempresa}/produto")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<produtos> findAll() {
-        return super.findAll();
+    public List<produtos> findAll(@PathParam("idempresa") Long idempresa) {
+        return this.getEmpresa(idempresa).getProduto();
     }
 
     @GET

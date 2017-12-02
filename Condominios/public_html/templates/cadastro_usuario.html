@@ -1,14 +1,20 @@
-<h1>Usuario v2</h1>
+<h1>Usuario</h1>
 
-<form> 
-    <label for="codigo">Código :</label>
-    <input id="id" name="id" type="text" ng-model="usuario.id"/>
-    <br>
+<form>
     <label for="idempresa">Código empresa:</label>
     <input id="idempresa" name="idempresa" type="text" ng-model="empresa.id"/>
     <br>
+    <label for="codigo">Código :</label>
+    <input id="id" name="id" type="text" ng-model="usuario.id"/>
+    <br>
     <label for="nome">Nome :</label>
     <input id="nome" name="nome" type="text" ng-model="usuario.nome"/>
+    <br>
+    <label for="login">usuario :</label>
+    <input id="login" name="login" type="text" ng-model="usuario.login"/>
+    <br>
+    <label for="senha">Senha :</label>
+    <input id="senha" name="senha" type="password" ng-model="usuario.senha"/>
     <br>
     <button ng-click="salvar(usuario)">Salvar</button>
     <br>

@@ -115,9 +115,12 @@ app.controller('ListagemUsuarioControler',function($scope,usuariosService){
 });
 app.controller('CadastroUsuarioControler',function($routeParams,$scope,$location,usuariosService){
     var id = $routeParams.idusuario;
+    if(empresa.id == 0){
+        empresa.id = $routeParams.id;
+    }
     $scope.empresa = empresa;
     
-    if(id){
+    if((id) && (id!=0)){
         usuariosService.getUsuario(id).then(function(usuarios){
             $scope.usuario = usuarios;
         });
@@ -246,30 +249,68 @@ app.controller('CadastroProdutoControler',function($routeParams,$scope,$location
 app.service('ProdutoService',function(ProdutoResource) {
 
     this.getProduto = function(id) {
-        return ProdutoResource.get({id:id}).$promise;
+        return ProdutoResource.BuscarProduto({idempresa:empresa.id},{id:id}).$promise;
     };
 
     this.getProdutos = function() {
-        return ProdutoResource.query().$promise;
+        return ProdutoResource.BuscarProdutos({idempresa:empresa.id}).$promise;
     };
 
     this.salvarProduto = function(produto) {
         if (produto.id){            
-            return ProdutoResource.update({id : produto.id},produto).$promise;
+            return ProdutoResource.AtualizarProduto({idempresa:empresa.id, id : produto.id},produto).$promise;
         }else{
-            return ProdutoResource.save(produto).$promise;
+            return ProdutoResource.adicionarProduto({idempresa:empresa.id},produto).$promise;
         }
-
     };
 
     this.excluir = function(produto) {
-        return ProdutoResource.delete({id : produto.id}).$promise;
+        return ProdutoResource.ApagarProduto({idempresa:empresa.id},{id : produto.id}).$promise;
     };  
 });
 app.factory('ProdutoResource',function($resource){
-         return $resource('http://localhost:8084/condominio_backend/webresources/model.produtos/:id',{},{
-                    update:{
-                        method:'PUT'
+         var Url = 'http://localhost:8084/condominio_backend/webresources/model.produtos/:idempresa';
+         return $resource(Url,{},{
+                    AtualizarProduto:{
+                        method:'PUT',
+                        url: Url + '/produto/:id',
+                        params:{
+                            idempresa:'idempresa',
+                            id:'@id'
+                            
+                        }
+                    },
+                    adicionarProduto:{
+                        method:'POST',
+                        url: Url + '/produto',
+                        params:{
+                            idempresa:'@idempresa'
+                        }
+                    },
+                    BuscarProdutos:{
+                        method:'GET',
+                        isArray:true,
+                        url: Url + '/produto',
+                        params:{
+                            idempresa:'@idempresa'
+                        }
+                    },
+                    BuscarProduto:{
+                        method:'GET',
+                        isArray:false,
+                        url: Url + '/produto/:id',
+                        params:{
+                            idempresa:'@idempresa',
+                            id:'@id'
+                        }
+                    },
+                    ApagarProduto:{
+                        method:'DELETE',
+                        url: Url + '/produto/:id',
+                        params:{
+                            idempresa:'@idempresa',
+                            id:'@id'
+                        }
                     }})
 });
 
@@ -587,6 +628,10 @@ app.controller('CadastroempresaControler',function($routeParams,$scope,$location
     $scope.cancelar = function(empresa) {
         $scope.empresas = {};
         $location.path('listagem_empresa');
+    };
+    
+    $scope.abrirCadastroUsuario = function(empresa){
+        $location.path('#!/cadastro_usuario/'+empresa.id+'/model.usuario/');      
     };
 });
 app.service('empresaservice',function(empresaResource) {

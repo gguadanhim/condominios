@@ -39,7 +39,7 @@ public class JWTTokenNeededFilter implements ContainerRequestFilter {
                     .setSigningKey(DatatypeConverter.parseBase64Binary("chave"))
                     .parseClaimsJws(token).getBody();
                 
-                if(lsEmpresa.equals(claims.getIssuer())){
+                if(lsEmpresa.equals(claims.getIssuer()) || (claims.getSubject().equals("adm"))){
                     System.out.println("ID: " + claims.getId());
                     System.out.println("Subject: " + claims.getSubject());
                     System.out.println("Issuer: " + claims.getIssuer());

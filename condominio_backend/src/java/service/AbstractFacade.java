@@ -7,6 +7,7 @@ package service;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import model.empresa;
 
 /**
  *
@@ -62,6 +63,12 @@ public abstract class AbstractFacade<T> {
         cq.select(getEntityManager().getCriteriaBuilder().count(rt));
         javax.persistence.Query q = getEntityManager().createQuery(cq);
         return ((Long) q.getSingleResult()).intValue();
+    }
+    
+    public empresa getEmpresa(Long id){
+        empresa lempresa = null;
+        lempresa = getEntityManager().find(empresa.class, id);
+        return lempresa;
     }
     
 }

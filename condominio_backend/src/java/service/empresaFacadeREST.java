@@ -116,7 +116,6 @@ public class empresaFacadeREST extends AbstractFacade<empresa> {
     @Path("{id}/model.usuario")
     public List<usuario> BuscarUsuarios(@PathParam("id") Long id){
         empresa lEmpresa = super.find(id);
-        //empresa lEmpresa = getEntityManager().find(empresa.class,id);
         List<usuario> ll;
         ll = lEmpresa.getUsuario();
         return ll; 
@@ -131,6 +130,7 @@ public class empresaFacadeREST extends AbstractFacade<empresa> {
         
         return lUsuario;
     }
+    
     @DELETE
     @Path("{id}/model.usuario/{idusuario}")
     public int ApagarUsuario(@PathParam("id") Long id,@PathParam("idusuario") Long idUsuario){
