@@ -481,7 +481,7 @@ app.service('Fornecedoreservice',function(FornecedorResource) {
     };
 
     this.excluir = function(Fornecedor) {
-        return FornecedorResource.delete({idempresa:empresa.id},{id : Fornecedor.id}).$promise;
+        return FornecedorResource.ApagarFornecedor({idempresa:empresa.id},{id : Fornecedor.id}).$promise;
     };  
 });
 app.factory('FornecedorResource',function($resource){

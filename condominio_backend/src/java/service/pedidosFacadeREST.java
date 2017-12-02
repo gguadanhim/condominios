@@ -19,6 +19,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import model.empresa;
 import model.pedidos;
 
 /**
@@ -35,48 +36,60 @@ public class pedidosFacadeREST extends AbstractFacade<pedidos> {
     public pedidosFacadeREST() {
         super(pedidos.class);
     }
+    
+    public pedidos getPedido(long aiCodigo){
+        pedidos lClasse;
+        lClasse = getEntityManager().find(pedidos.class, aiCodigo );
+        return lClasse;
+    }
 
     @POST
-    @Override
+    @Path("{idempresa}/pedido")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public int create(pedidos entity) {
-        super.create(entity);
+    public int create(@PathParam("idempresa") Long idempresa,pedidos entity) {
+        empresa lEmpresa = this.getEmpresa(idempresa);
+        entity.setEmpresa(lEmpresa);
+        lEmpresa.getPedido().add(entity);
         em.getTransaction().begin();
         em.getTransaction().commit();
         return 1;
     }
 
     @PUT
-    @Path("{id}")
+    @Path("{idempresa}/pedido/{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") Long id, pedidos entity) {
-        super.edit(entity);
+    public void edit(@PathParam("idempresa") Long idempresa,@PathParam("id") Long id, pedidos entity) {
+        empresa lEmpresa = this.getEmpresa(idempresa);
+        entity.setEmpresa(lEmpresa);
+        getEntityManager().merge(entity);
         em.getTransaction().begin();
         em.getTransaction().commit();
-        
     }
 
     @DELETE
-    @Path("{id}")
-    public void remove(@PathParam("id") Long id) {
-        super.remove(super.find(id));
+    @Path("{idempresa}/pedido/{id}")
+    public void remove(@PathParam("idempresa") Long idempresa,@PathParam("id") Long id) {
+        pedidos lPedidos;
+        lPedidos = getEntityManager().find(pedidos.class,id);
+        super.remove(lPedidos);
+        this.getEmpresa(idempresa).getPedido().remove(lPedidos);
+        
         em.getTransaction().begin();
         em.getTransaction().commit();
-        
     }
 
     @GET
-    @Path("{id}")
+    @Path("{idempresa}/pedido/{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public pedidos find(@PathParam("id") Long id) {
-        return super.find(id);
+    public pedidos find(@PathParam("idempresa") Long idempresa,@PathParam("id") Long id) {
+        return this.getPedido(id);
     }
 
     @GET
-    @Override
+    @Path("{idempresa}/pedido")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<pedidos> findAll() {
-        return super.findAll();
+    public List<pedidos> findAll(@PathParam("idempresa") Long idempresa) {
+        return this.getEmpresa(idempresa).getPedido();
     }
 
     @GET

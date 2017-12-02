@@ -5,7 +5,6 @@
  */
 package service;
 
-//import com.sun.org.apache.xml.internal.security.algorithms.SignatureAlgorithm;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
@@ -31,7 +30,7 @@ import model.usuario;
  *
  * @author Developer
  */
-//@javax.ejb.Stateless
+
 @Path("model.usuario")
 public class usuarioFacadeREST extends AbstractFacade<usuario> {
 
@@ -109,9 +108,6 @@ public class usuarioFacadeREST extends AbstractFacade<usuario> {
         }
         return em;
     }
-    
-    //@Inject
-    //private KeyGenerator keyGenerator;
     
     @POST
     @Path("/login")

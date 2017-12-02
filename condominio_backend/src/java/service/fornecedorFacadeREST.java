@@ -19,6 +19,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import model.empresa;
 import model.fornecedor;
 
 /**
@@ -34,48 +35,60 @@ public class fornecedorFacadeREST extends AbstractFacade<fornecedor> {
     public fornecedorFacadeREST() {
         super(fornecedor.class);
     }
+    
+    public fornecedor getForncedor(long aiCodigo){
+        fornecedor lClasse;
+        lClasse = getEntityManager().find(fornecedor.class, aiCodigo );
+        return lClasse;
+    }
 
     @POST
-    @Override
+    @Path("{idempresa}/fornecedor")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public int create(fornecedor entity) {
-        super.create(entity);
+    public int create(@PathParam("idempresa") Long idempresa,fornecedor entity) {
+        empresa lEmpresa = this.getEmpresa(idempresa);
+        entity.setEmpresa(lEmpresa);
+        lEmpresa.getFornecedor().add(entity);
         em.getTransaction().begin();
         em.getTransaction().commit();
         return 1;
     }
 
     @PUT
-    @Path("{id}")
+    @Path("{idempresa}/fornecedor/{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") Long id, fornecedor entity) {
-        super.edit(entity);
+    public void edit(@PathParam("idempresa") Long idempresa,@PathParam("id") Long id, fornecedor entity) {
+        empresa lEmpresa = this.getEmpresa(idempresa);
+        entity.setEmpresa(lEmpresa);
+        getEntityManager().merge(entity);
         em.getTransaction().begin();
         em.getTransaction().commit();
-        
     }
 
     @DELETE
-    @Path("{id}")
-    public void remove(@PathParam("id") Long id) {
-        super.remove(super.find(id));
+    @Path("{idempresa}/fornecedor/{id}")
+    public void remove(@PathParam("idempresa") Long idempresa,@PathParam("id") Long id) {
+        fornecedor lFornecedor;
+        lFornecedor = getEntityManager().find(fornecedor.class,id);
+        super.remove(lFornecedor);
+        this.getEmpresa(idempresa).getFornecedor().remove(lFornecedor);
+        
         em.getTransaction().begin();
         em.getTransaction().commit();
-        
     }
 
     @GET
-    @Path("{id}")
+    @Path("{idempresa}/fornecedor/{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public fornecedor find(@PathParam("id") Long id) {
-        return super.find(id);
+    public fornecedor find(@PathParam("idempresa") Long idempresa,@PathParam("id") Long id) {
+        return this.getForncedor(id);
     }
 
     @GET
-    @Override
+    @Path("{idempresa}/fornecedor")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<fornecedor> findAll() {
-        return super.findAll();
+    public List<fornecedor> findAll(@PathParam("idempresa") Long idempresa) {
+        return this.getEmpresa(idempresa).getFornecedor();
     }
 
     @GET
