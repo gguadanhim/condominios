@@ -356,30 +356,69 @@ app.controller('CadastroClienteControler',function($routeParams,$scope,$location
 app.service('ClienteService',function(ClienteResource) {
 
     this.getCliente = function(id) {
-        return ClienteResource.get({id:id}).$promise;
+        return ClienteResource.BuscarCliente({idempresa:empresa.id},{id:id}).$promise;
     };
 
     this.getClientes = function() {
-        return ClienteResource.query().$promise;
+        return ClienteResource.BuscarClientes({idempresa:empresa.id}).$promise;
     };
 
     this.salvarCliente = function(cliente) {
         if (cliente.id){            
-            return ClienteResource.update({id : cliente.id},cliente).$promise;
+            return ClienteResource.AtualizarCliente({idempresa:empresa.id , id : cliente.id},cliente).$promise;
         }else{
-            return ClienteResource.save(cliente).$promise;
+            return ClienteResource.adicionarCliente({idempresa:empresa.id},cliente).$promise;
         }
 
     };
 
     this.excluir = function(cliente) {
-        return ClienteResource.delete({id : cliente.id}).$promise;
+        return ClienteResource.ApagarCliente({idempresa:empresa.id},{id : cliente.id}).$promise;
     };  
 });
 app.factory('ClienteResource',function($resource){
-         return $resource('http://localhost:8084/condominio_backend/webresources/model.cliente/:id',{},{
-                    update:{
-                        method:'PUT'
+         var Url = 'http://localhost:8084/condominio_backend/webresources/model.cliente/:idempresa';
+         return $resource(Url,{},{
+                    AtualizarCliente:{
+                        method:'PUT',
+                        url: Url + '/cliente/:id',
+                        params:{
+                            idempresa:'idempresa',
+                            id:'@id'
+                            
+                        }
+                    },
+                    adicionarCliente:{
+                        method:'POST',
+                        url: Url + '/cliente',
+                        params:{
+                            idempresa:'@idempresa'
+                        }
+                    },
+                    BuscarClientes:{
+                        method:'GET',
+                        isArray:true,
+                        url: Url + '/cliente',
+                        params:{
+                            idempresa:'@idempresa'
+                        }
+                    },
+                    BuscarCliente:{
+                        method:'GET',
+                        isArray:false,
+                        url: Url + '/cliente/:id',
+                        params:{
+                            idempresa:'@idempresa',
+                            id:'@id'
+                        }
+                    },
+                    ApagarCliente:{
+                        method:'DELETE',
+                        url: Url + '/cliente/:id',
+                        params:{
+                            idempresa:'@idempresa',
+                            id:'@id'
+                        }
                     }})
 });
 
@@ -425,30 +464,69 @@ app.controller('CadastroFornecedorControler',function($routeParams,$scope,$locat
 app.service('Fornecedoreservice',function(FornecedorResource) {
 
     this.getFornecedor = function(id) {
-        return FornecedorResource.get({id:id}).$promise;
+        return FornecedorResource.BuscarFornecedor({idempresa:empresa.id},{id:id}).$promise;
     };
 
     this.getFornecedores = function() {
-        return FornecedorResource.query().$promise;
+        return FornecedorResource.BuscarFornecedores({idempresa:empresa.id}).$promise;
     };
 
     this.salvarFornecedor = function(Fornecedor) {
         if (Fornecedor.id){            
-            return FornecedorResource.update({id : Fornecedor.id},Fornecedor).$promise;
+            return FornecedorResource.AtualizarFornecedor({idempresa:empresa.id , id : Fornecedor.id},Fornecedor).$promise;
         }else{
-            return FornecedorResource.save(Fornecedor).$promise;
+            return FornecedorResource.adicionarFornecedor({idempresa:empresa.id},Fornecedor).$promise;
         }
 
     };
 
     this.excluir = function(Fornecedor) {
-        return FornecedorResource.delete({id : Fornecedor.id}).$promise;
+        return FornecedorResource.delete({idempresa:empresa.id},{id : Fornecedor.id}).$promise;
     };  
 });
 app.factory('FornecedorResource',function($resource){
-         return $resource('http://localhost:8084/condominio_backend/webresources/model.fornecedor/:id',{},{
-                    update:{
-                        method:'PUT'
+         var Url = 'http://localhost:8084/condominio_backend/webresources/model.fornecedor/:idempresa';
+         return $resource(Url,{},{
+                    AtualizarFornecedor:{
+                        method:'PUT',
+                        url: Url + '/fornecedor/:id',
+                        params:{
+                            idempresa:'idempresa',
+                            id:'@id'
+                            
+                        }
+                    },
+                    adicionarFornecedor:{
+                        method:'POST',
+                        url: Url + '/fornecedor',
+                        params:{
+                            idempresa:'@idempresa'
+                        }
+                    },
+                    BuscarFornecedores:{
+                        method:'GET',
+                        isArray:true,
+                        url: Url + '/fornecedor',
+                        params:{
+                            idempresa:'@idempresa'
+                        }
+                    },
+                    BuscarFornecedor:{
+                        method:'GET',
+                        isArray:false,
+                        url: Url + '/fornecedor/:id',
+                        params:{
+                            idempresa:'@idempresa',
+                            id:'@id'
+                        }
+                    },
+                    ApagarFornecedor:{
+                        method:'DELETE',
+                        url: Url + '/fornecedor/:id',
+                        params:{
+                            idempresa:'@idempresa',
+                            id:'@id'
+                        }
                     }})
 });
 
@@ -495,30 +573,69 @@ app.controller('CadastroPedidoControler',function($routeParams,$scope,$location,
 app.service('Pedidoservice',function(PedidoResource) {
 
     this.getPedido = function(id) {
-        return PedidoResource.get({id:id}).$promise;
+        return PedidoResource.BuscarPedido({idempresa:empresa.id},{id:id}).$promise;
     };
 
     this.getPedidos = function() {
-        return PedidoResource.query().$promise;
+        return PedidoResource.BuscarPedidos({idempresa:empresa.id}).$promise;
     };
 
     this.salvarPedido = function(Pedido) {
         if (Pedido.id){            
-            return PedidoResource.update({id : Pedido.id},Pedido).$promise;
+            return PedidoResource.AtualizarPedido({idempresa:empresa.id , id : Pedido.id},Pedido).$promise;
         }else{
-            return PedidoResource.save(Pedido).$promise;
+            return PedidoResource.adicionarPedido({idempresa:empresa.id},Pedido).$promise;
         }
 
     };
 
     this.excluir = function(Pedido) {
-        return PedidoResource.delete({id : Pedido.id}).$promise;
+        return PedidoResource.ApagarPedido({idempresa:empresa.id},{id : Pedido.id}).$promise;
     };  
 });
 app.factory('PedidoResource',function($resource){
-         return $resource('http://localhost:8084/condominio_backend/webresources/model.pedidos/:id',{},{
-                    update:{
-                        method:'PUT'
+         var Url = 'http://localhost:8084/condominio_backend/webresources/model.pedidos/:idempresa';
+         return $resource(Url,{},{
+                    AtualizarPedido:{
+                        method:'PUT',
+                        url: Url + '/pedido/:id',
+                        params:{
+                            idempresa:'idempresa',
+                            id:'@id'
+                            
+                        }
+                    },
+                    adicionarPedido:{
+                        method:'POST',
+                        url: Url + '/pedido',
+                        params:{
+                            idempresa:'@idempresa'
+                        }
+                    },
+                    BuscarPedidos:{
+                        method:'GET',
+                        isArray:true,
+                        url: Url + '/pedido',
+                        params:{
+                            idempresa:'@idempresa'
+                        }
+                    },
+                    BuscarPedido:{
+                        method:'GET',
+                        isArray:false,
+                        url: Url + '/pedido/:id',
+                        params:{
+                            idempresa:'@idempresa',
+                            id:'@id'
+                        }
+                    },
+                    ApagarPedido:{
+                        method:'DELETE',
+                        url: Url + '/pedido/:id',
+                        params:{
+                            idempresa:'@idempresa',
+                            id:'@id'
+                        }
                     }})
 });
 
@@ -564,30 +681,69 @@ app.controller('CadastroVendaControler',function($routeParams,$scope,$location,V
 app.service('Vendaservice',function(VendaResource) {
 
     this.getVenda = function(id) {
-        return VendaResource.get({id:id}).$promise;
+        return VendaResource.BuscarVenda({idempresa:empresa.id},{id:id}).$promise;
     };
 
     this.getVendas = function() {
-        return VendaResource.query().$promise;
+        return VendaResource.BuscarVendas({idempresa:empresa.id}).$promise;
     };
 
     this.salvarVenda = function(Venda) {
         if (Venda.id){            
-            return VendaResource.update({id : Venda.id},Venda).$promise;
+            return VendaResource.AtualizarVenda({idempresa:empresa.id , id : Venda.id},Venda).$promise;
         }else{
-            return VendaResource.save(Venda).$promise;
+            return VendaResource.adicionarVenda({idempresa:empresa.id},Venda).$promise;
         }
 
     };
 
     this.excluir = function(Venda) {
-        return VendaResource.delete({id : Venda.id}).$promise;
+        return VendaResource.ApagarVenda({idempresa:empresa.id},{id : Venda.id}).$promise;
     };  
 });
 app.factory('VendaResource',function($resource){
-         return $resource('http://localhost:8084/condominio_backend/webresources/model.vendas/:id',{},{
-                    update:{
-                        method:'PUT'
+         var Url = 'http://localhost:8084/condominio_backend/webresources/model.vendas/:idempresa';
+         return $resource(Url,{},{
+                    AtualizarVenda:{
+                        method:'PUT',
+                        url: Url + '/venda/:id',
+                        params:{
+                            idempresa:'idempresa',
+                            id:'@id'
+                            
+                        }
+                    },
+                    adicionarVenda:{
+                        method:'POST',
+                        url: Url + '/venda',
+                        params:{
+                            idempresa:'@idempresa'
+                        }
+                    },
+                    BuscarVendas:{
+                        method:'GET',
+                        isArray:true,
+                        url: Url + '/venda',
+                        params:{
+                            idempresa:'@idempresa'
+                        }
+                    },
+                    BuscarVenda:{
+                        method:'GET',
+                        isArray:false,
+                        url: Url + '/venda/:id',
+                        params:{
+                            idempresa:'@idempresa',
+                            id:'@id'
+                        }
+                    },
+                    ApagarVenda:{
+                        method:'DELETE',
+                        url: Url + '/venda/:id',
+                        params:{
+                            idempresa:'@idempresa',
+                            id:'@id'
+                        }
                     }})
 });
 
