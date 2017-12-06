@@ -31,7 +31,6 @@ public class vendas implements Serializable{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    //cliente
     private int forma_pagamento;
     
     private double valor_total;

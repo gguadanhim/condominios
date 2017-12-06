@@ -41,8 +41,7 @@ public class produtos implements Serializable{
 
     @ManyToOne
     private empresa iEmpresa;
-
-    
+  
     @XmlTransient
     public empresa getEmpresa() {
         return iEmpresa;

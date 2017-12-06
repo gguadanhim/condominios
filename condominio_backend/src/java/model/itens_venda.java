@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -28,12 +29,13 @@ public class itens_venda implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    //produto
-    
     private double valor_unitario;
     
     private double quantidade;
 
+    @OneToOne
+    private vendas iProduto;
+    
     @ManyToOne
     private vendas iVendas;
     

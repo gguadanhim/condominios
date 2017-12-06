@@ -31,13 +31,14 @@ public class pedidos implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    //fornecedor
-        
+    private int forma_pagamento;
+    
     private double valor_total;
-            
+    
+    private String detalhes;
+    
     private int status;
 
-    
     @OneToMany(mappedBy = "iPedido",cascade = CascadeType.PERSIST)
     private List<itens_pedido> iItensPedido;
     
@@ -111,5 +112,33 @@ public class pedidos implements Serializable {
 
     public void setItensPedido(List<itens_pedido> iItensPedido) {
         this.iItensPedido = iItensPedido;
+    }
+
+    /**
+     * @return the forma_pagamento
+     */
+    public int getForma_pagamento() {
+        return forma_pagamento;
+    }
+
+    /**
+     * @param forma_pagamento the forma_pagamento to set
+     */
+    public void setForma_pagamento(int forma_pagamento) {
+        this.forma_pagamento = forma_pagamento;
+    }
+
+    /**
+     * @return the detalhes
+     */
+    public String getDetalhes() {
+        return detalhes;
+    }
+
+    /**
+     * @param detalhes the detalhes to set
+     */
+    public void setDetalhes(String detalhes) {
+        this.detalhes = detalhes;
     }
 }

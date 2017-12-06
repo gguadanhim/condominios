@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -28,12 +29,13 @@ public class itens_pedido implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    //produto
-    
     private double quantidade;
     
     private double valor_unitario;
 
+    @OneToOne
+    private pedidos iProduto;
+    
     @ManyToOne
     private pedidos iPedido;
     
@@ -84,6 +86,20 @@ public class itens_pedido implements Serializable {
      */
     public void setValor_unitario(double valor_unitario) {
         this.valor_unitario = valor_unitario;
+    }
+
+    /**
+     * @return the iProduto
+     */
+    public pedidos getiProduto() {
+        return iProduto;
+    }
+
+    /**
+     * @param iProduto the iProduto to set
+     */
+    public void setiProduto(pedidos iProduto) {
+        this.iProduto = iProduto;
     }
     
     
