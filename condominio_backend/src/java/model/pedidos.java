@@ -5,6 +5,7 @@
  */
 package model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -14,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -38,6 +40,8 @@ public class pedidos implements Serializable {
     private String detalhes;
     
     private int status;
+    
+    private long codigo_fornecedor;
 
     @OneToMany(mappedBy = "iPedido",cascade = CascadeType.PERSIST)
     private List<itens_pedido> iItensPedido;
@@ -140,5 +144,21 @@ public class pedidos implements Serializable {
      */
     public void setDetalhes(String detalhes) {
         this.detalhes = detalhes;
+    }
+
+    /**
+     * @return the codigo_fornecedor
+     */
+    @JsonInclude()
+    @Transient
+    public long getCodigo_fornecedor() {
+        return codigo_fornecedor;
+    }
+
+    /**
+     * @param codigo_fornecedor the codigo_fornecedor to set
+     */
+    public void setCodigo_fornecedor(long codigo_fornecedor) {
+        this.codigo_fornecedor = codigo_fornecedor;
     }
 }

@@ -20,6 +20,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import model.empresa;
+import model.fornecedor;
+import model.pedido_comunicacao;
 import model.pedidos;
 
 /**
@@ -37,18 +39,34 @@ public class pedidosFacadeREST extends AbstractFacade<pedidos> {
         super(pedidos.class);
     }
     
+    public pedidos convertePedido(pedido_comunicacao aPedido){
+        pedidos lPedidos = new pedidos();
+        
+        lPedidos = aPedido;
+        
+        return lPedidos;
+    }
     public pedidos getPedido(long aiCodigo){
         pedidos lClasse;
         lClasse = getEntityManager().find(pedidos.class, aiCodigo );
+        return lClasse;
+    }
+    
+    public fornecedor getFornecedor(long aiCodigo){
+        fornecedor lClasse;
+        lClasse = getEntityManager().find(fornecedor.class, aiCodigo );
         return lClasse;
     }
 
     @POST
     @Path("{idempresa}/pedido")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public int create(@PathParam("idempresa") Long idempresa,pedidos entity) {
+    public int create(@PathParam("idempresa") Long idempresa, pedidos entity) {
         empresa lEmpresa = this.getEmpresa(idempresa);
+        
+        entity.setFornecedor(getFornecedor(entity.getCodigo_fornecedor()));
         entity.setEmpresa(lEmpresa);
+        
         lEmpresa.getPedido().add(entity);
         em.getTransaction().begin();
         em.getTransaction().commit();
@@ -60,7 +78,10 @@ public class pedidosFacadeREST extends AbstractFacade<pedidos> {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void edit(@PathParam("idempresa") Long idempresa,@PathParam("id") Long id, pedidos entity) {
         empresa lEmpresa = this.getEmpresa(idempresa);
+        
+        entity.setFornecedor(getFornecedor(entity.getCodigo_fornecedor()));
         entity.setEmpresa(lEmpresa);
+        
         getEntityManager().merge(entity);
         em.getTransaction().begin();
         em.getTransaction().commit();
@@ -96,7 +117,7 @@ public class pedidosFacadeREST extends AbstractFacade<pedidos> {
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<pedidos> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
-        return super.findRange(new int[]{from, to});
+        return null;//super.findRange(new int[]{from, to});
     }
 
     @GET

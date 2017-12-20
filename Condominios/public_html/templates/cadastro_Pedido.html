@@ -5,10 +5,32 @@
        <div class="form-group col-md-4">
          <label for="id">Código</label>
          <input id="id" name="id" type="text" ng-model="Pedidos.id" class="form-control" >
+         <br>
+         <label for="formapagto">Forma de pagamento</label>
+         <select ng-model="Pedidos.forma_pagamento">
+            <option value=0>A vista</option>
+            <option value=1>Cartão débito</option>
+            <option value=2>Cartão crédito</option>
+         </select>
+         <br>
          <label for="valor_total">Valor total</label>
          <input id="valor_total" name="valor_total" type="text" ng-model="Pedidos.valor_total" class="form-control" >
+         <br>
+         <label for="detalhes">Detalhes</label>
+         <input id="detalhes" name="detalhes" type="text" ng-model="Pedidos.detalhes" class="form-control" >
+         <br>
+         <label for="fornecedor">Fornecedor</label>
+         <select name="fornecedor" ng-model="Pedidos.codigo_fornecedor">
+            <option ng-repeat="fornecedor in fornecedores track by fornecedor.id" value="{{fornecedor.id}}" ng-selected="Pedidos.codigo_fornecedor == fornecedor.id">{{fornecedor.nome}}</option>
+         </select>  
+         <br>
          <label for="status">Status</label>
-         <input id="status" name="status" type="text" ng-model="Pedidos.status" class="form-control" >
+         <select ng-model="Pedidos.status" convert-to-number>
+            <option value="0">Em aberto</option>
+            <option value="1">Cancelado</option>
+            <option value="2">Concluído</option>
+         </select>
+         
        </div>
     </div>
     <br>
