@@ -552,18 +552,18 @@ app.controller('CadastroPedidoControler',function($routeParams,$scope,$location,
                 
     Fornecedoreservice.getFornecedores().then(function(Fornecedores){
         $scope.fornecedores = Fornecedores;
-    });
-        
-    if(id){
-        Pedidoservice.getPedido(id).then(function(Pedidos){
-            Pedidos.forma_pagamento = Pedidos.forma_pagamento.toString();
-            Pedidos.status = Pedidos.status.toString();
-            $scope.Pedidos = Pedidos;
-        });
-    }else{
-        $scope.Pedidos = {};
-    }
     
+        
+        if(id){
+            Pedidoservice.getPedido(id).then(function(Pedidos){
+                Pedidos.forma_pagamento = Pedidos.forma_pagamento.toString();
+                Pedidos.status = Pedidos.status.toString();
+                $scope.Pedidos = Pedidos;
+            });
+        }else{
+            $scope.Pedidos = {};
+        }
+    });
     $scope.salvar = function(Pedido) {
         Pedidoservice.salvarPedido(Pedido).then(function(){
             $location.path('listagem_Pedido');
