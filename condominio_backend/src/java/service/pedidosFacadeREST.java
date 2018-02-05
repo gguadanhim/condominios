@@ -21,6 +21,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import model.empresa;
 import model.fornecedor;
+import model.itens_pedido;
 import model.pedido_comunicacao;
 import model.pedidos;
 
@@ -87,6 +88,33 @@ public class pedidosFacadeREST extends AbstractFacade<pedidos> {
         em.getTransaction().commit();
     }
 
+    @PUT
+    @Path("{idempresa}/pedido/{id}/itenspedido")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void edit(@PathParam("idempresa") Long idempresa,@PathParam("id") Long id, List<itens_pedido> entity) {
+        
+        pedidos lPedido;
+        lPedido = this.getPedido(id);
+        lPedido.setItensPedido(entity);
+        
+        for( itens_pedido item : entity )
+        {
+              item.setPedido(lPedido);
+        }
+        
+        getEntityManager().merge(lPedido);
+        em.getTransaction().begin();
+        em.getTransaction().commit();
+    }
+    
+    @GET
+    @Path("{idempresa}/pedido/{id}/itenspedido")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<itens_pedido> finditens(@PathParam("idempresa") Long idempresa,@PathParam("id") Long id) {
+        return this.getPedido(id).getItensPedido();
+    }
+    
+    
     @DELETE
     @Path("{idempresa}/pedido/{id}")
     public void remove(@PathParam("idempresa") Long idempresa,@PathParam("id") Long id) {

@@ -547,28 +547,39 @@ app.controller('ListagemPedidoControler',function($scope,Pedidoservice){
         });
     };
 });
-app.controller('CadastroPedidoControler',function($routeParams,$scope,$location,Pedidoservice, Fornecedoreservice){
+app.controller('CadastroPedidoControler',function($routeParams,$scope,$location,Pedidoservice, Fornecedoreservice, ItensPedidoservice){
     var id = $routeParams.id;
                 
     Fornecedoreservice.getFornecedores().then(function(Fornecedores){
         $scope.fornecedores = Fornecedores;
-    
         
         if(id){
             Pedidoservice.getPedido(id).then(function(Pedidos){
                 Pedidos.forma_pagamento = Pedidos.forma_pagamento.toString();
                 Pedidos.status = Pedidos.status.toString();
                 $scope.Pedidos = Pedidos;
+                
+                ItensPedidoservice.getItensPedido(Pedidos).then(function(itensPedidos){
+                    $scope.itensPedido = itensPedidos;
+                })
             });
         }else{
             $scope.Pedidos = {};
         }
     });
-    $scope.salvar = function(Pedido) {
+    
+    $scope.salvar = function(Pedido,itensPedido) {
         Pedidoservice.salvarPedido(Pedido).then(function(){
-            $location.path('listagem_Pedido');
+            ItensPedidoservice.salvarPedido(Pedido,itensPedido).then(function(){
+                $location.path('listagem_Pedido');
+            });
         });
         $scope.Pedidos = {};
+    };
+    
+    $scope.adicionarLinha = function(itens_pedido) {
+        var item = {"id":0, "quantidade":0, "valor_unitario":0}
+        itens_pedido.push(item)
     };
 
     $scope.cancelar = function(Pedido) {
@@ -644,6 +655,45 @@ app.factory('PedidoResource',function($resource){
                         }
                     }})
 });
+
+
+app.service('ItensPedidoservice',function(ItensPedidoResource) {
+
+    
+    this.getItensPedido = function(Pedido) {
+        return ItensPedidoResource.BuscarItensPedidos({idempresa:empresa.id , id : Pedido.id}).$promise;
+    };
+
+    this.salvarPedido = function(Pedido,itensPedido) {
+        if (Pedido.id){            
+            return ItensPedidoResource.AtualizarItensPedido({idempresa:empresa.id , id : Pedido.id},itensPedido).$promise;
+        }
+
+    };
+});
+app.factory('ItensPedidoResource',function($resource){
+         var Url = 'http://localhost:8084/condominio_backend/webresources/model.pedidos/:idempresa';
+         return $resource(Url,{},{
+                    AtualizarItensPedido:{
+                        method:'PUT',
+                        isArray:true,
+                        url: Url + '/pedido/:id/itenspedido',
+                        params:{
+                            idempresa:'idempresa',
+                            id:'@id'
+                        }
+                    },
+                    BuscarItensPedidos:{
+                        method:'GET',
+                        isArray:true,
+                        url: Url + '/pedido/:id/itenspedido',
+                        params:{
+                            idempresa:'@idempresa',
+                            id:'@id'
+                        }
+                    }})
+});
+
 
 
 app.controller('ListagemVendaControler',function($scope,Vendaservice){

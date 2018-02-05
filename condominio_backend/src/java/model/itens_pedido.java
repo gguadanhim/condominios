@@ -34,7 +34,7 @@ public class itens_pedido implements Serializable {
     private double valor_unitario;
 
     @OneToOne
-    private pedidos iProduto;
+    private produtos iProduto;
     
     @ManyToOne
     private pedidos iPedido;
@@ -91,14 +91,14 @@ public class itens_pedido implements Serializable {
     /**
      * @return the iProduto
      */
-    public pedidos getiProduto() {
+    public produtos getiProduto() {
         return iProduto;
     }
 
     /**
      * @param iProduto the iProduto to set
      */
-    public void setiProduto(pedidos iProduto) {
+    public void setiProduto(produtos iProduto) {
         this.iProduto = iProduto;
     }
     

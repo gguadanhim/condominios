@@ -30,11 +30,38 @@
             <option value="1">Cancelado</option>
             <option value="2">Concluído</option>
          </select>
-         
+         <br>
+         <h2>Produtos</h2>
+         <br>
+         <table>
+             <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Codigo Produto</th>
+                    <th>Nome</th>
+                    <th>Valor</th>
+                    <th>Quantidade</th>
+                </tr>
+             </thead>
+             <tbody>
+                 <tr ng-repeat="item in itensPedido track by $index">
+                     <td><input id="id" name="id" type="text" ng-model="item.id" class="form-control" ></td>
+                    <td><input id="codigo_produto" name="codigo_produto" type="text" ng-model="item.iProduto.id" class="form-control" ></td>
+                    <td><input id="desc_produto" name="desc_produto" type="text" ng-model="item.iProduto.nome" class="form-control" ></td>
+                    <td><input id="valor_produto" name="valor_produto" type="text" ng-model="item.valor_unitario" class="form-control" ></td>
+                    <td><input id="quantidade_produto" name="quantidade_produto" type="text" ng-model="item.quantidade" class="form-control" ></td>
+                    <button class="btn btn-success" ng-click="adicionarLinha(itensPedido)">Add</button>
+                </tr>
+             <tbody>
+             
+         </table>
+
        </div>
     </div>
     <br>
-    <button class="btn btn-success" ng-click="salvar(Pedidos)">Salvar</button>
+    <br>
+    <br>
+    <button class="btn btn-success" ng-click="salvar(Pedidos,itensPedido)">Salvar</button>
     <button  class="btn btn-secondary" ng-click="cancelar(Pedidos)">Cancelar</button>
     
 </form>

@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -43,7 +44,7 @@ public class pedidos implements Serializable {
     
     private long codigo_fornecedor;
 
-    @OneToMany(mappedBy = "iPedido",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "iPedido",cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
     private List<itens_pedido> iItensPedido;
     
     @ManyToOne
@@ -109,7 +110,7 @@ public class pedidos implements Serializable {
         this.status = status;
     }
     
-    @XmlTransient
+    @Transient
     public List<itens_pedido> getItensPedido() {
         return iItensPedido;
     }
