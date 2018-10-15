@@ -40,13 +40,6 @@ public class pedidosFacadeREST extends AbstractFacade<pedidos> {
         super(pedidos.class);
     }
     
-    public pedidos convertePedido(pedido_comunicacao aPedido){
-        pedidos lPedidos = new pedidos();
-        
-        lPedidos = aPedido;
-        
-        return lPedidos;
-    }
     public pedidos getPedido(long aiCodigo){
         pedidos lClasse;
         lClasse = getEntityManager().find(pedidos.class, aiCodigo );
@@ -96,10 +89,15 @@ public class pedidosFacadeREST extends AbstractFacade<pedidos> {
         pedidos lPedido;
         lPedido = this.getPedido(id);
         lPedido.setItensPedido(entity);
+        produtosFacadeREST lProdutos = new produtosFacadeREST();
+        
+        lPedido.setItensPedido(entity);
         
         for( itens_pedido item : entity )
         {
               item.setPedido(lPedido);
+              
+              item.setiProduto(lProdutos.getProduto(item.codigo_produto));
         }
         
         getEntityManager().merge(lPedido);

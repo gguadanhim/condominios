@@ -547,25 +547,30 @@ app.controller('ListagemPedidoControler',function($scope,Pedidoservice){
         });
     };
 });
-app.controller('CadastroPedidoControler',function($routeParams,$scope,$location,Pedidoservice, Fornecedoreservice, ItensPedidoservice){
+app.controller('CadastroPedidoControler',function($routeParams,$scope,$location,Pedidoservice, Fornecedoreservice, ItensPedidoservice,ProdutoService){
     var id = $routeParams.id;
                 
     Fornecedoreservice.getFornecedores().then(function(Fornecedores){
         $scope.fornecedores = Fornecedores;
         
-        if(id){
-            Pedidoservice.getPedido(id).then(function(Pedidos){
-                Pedidos.forma_pagamento = Pedidos.forma_pagamento.toString();
-                Pedidos.status = Pedidos.status.toString();
-                $scope.Pedidos = Pedidos;
-                
-                ItensPedidoservice.getItensPedido(Pedidos).then(function(itensPedidos){
-                    $scope.itensPedido = itensPedidos;
-                })
-            });
-        }else{
-            $scope.Pedidos = {};
-        }
+        ProdutoService.getProdutos().then(function(Produtos){
+            
+            $scope.produtos = Produtos;
+
+            if(id){
+                Pedidoservice.getPedido(id).then(function(Pedidos){
+                    Pedidos.forma_pagamento = Pedidos.forma_pagamento.toString();
+                    Pedidos.status = Pedidos.status.toString();
+                    $scope.Pedidos = Pedidos;
+
+                    ItensPedidoservice.getItensPedido(Pedidos).then(function(itensPedidos){
+                        $scope.itensPedido = itensPedidos;
+                    })
+                });
+            }else{
+                $scope.Pedidos = {};
+            }
+        });
     });
     
     $scope.salvar = function(Pedido,itensPedido) {
@@ -881,7 +886,6 @@ app.controller('InicioControler',function($scope, $http, $rootScope,$location){
         
     }
 });
-
 app.controller('LogofControler',function($scope, $http, $rootScope,$location){
     token = '';
     empresa.id = 0;
@@ -889,7 +893,6 @@ app.controller('LogofControler',function($scope, $http, $rootScope,$location){
     
     $location.path('/login');
 });
-
 app.controller('LoginControler',function($scope, $http, $rootScope,$location){
     
     $scope.SendData = function () {

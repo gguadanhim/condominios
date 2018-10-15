@@ -46,8 +46,18 @@
              <tbody>
                  <tr ng-repeat="item in itensPedido track by $index">
                      <td><input id="id" name="id" type="text" ng-model="item.id" class="form-control" ></td>
-                    <td><input id="codigo_produto" name="codigo_produto" type="text" ng-model="item.iProduto.id" class="form-control" ></td>
+                    
+                     <pre>itensPedido = {{itensPedido | json}}</pre>
+                     
+                    <td> 
+                        <input id="codigo_produto" name="codigo_produto" type="text" ng-model="item.iProduto.id" class="form-control" >
+                        <select name="repeatSelect" id="repeatSelect" ng-model="item.codigo_produto">
+                            <option ng-repeat="option in produtos" value="{{option.id}}">{{option.nome}}</option>
+                        </select>
+                    </td>
+                    
                     <td><input id="desc_produto" name="desc_produto" type="text" ng-model="item.iProduto.nome" class="form-control" ></td>
+
                     <td><input id="valor_produto" name="valor_produto" type="text" ng-model="item.valor_unitario" class="form-control" ></td>
                     <td><input id="quantidade_produto" name="quantidade_produto" type="text" ng-model="item.quantidade" class="form-control" ></td>
                     <button class="btn btn-success" ng-click="adicionarLinha(itensPedido)">Add</button>
@@ -55,7 +65,6 @@
              <tbody>
              
          </table>
-
        </div>
     </div>
     <br>

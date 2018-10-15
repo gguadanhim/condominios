@@ -5,6 +5,7 @@
  */
 package model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -33,6 +35,8 @@ public class itens_pedido implements Serializable {
     
     private double valor_unitario;
 
+    public long codigo_produto;
+    
     @OneToOne
     private produtos iProduto;
     
@@ -101,6 +105,18 @@ public class itens_pedido implements Serializable {
     public void setiProduto(produtos iProduto) {
         this.iProduto = iProduto;
     }
-    
+   
+    @JsonInclude()
+    @Transient
+    public long getCodigo_produto() {
+        return codigo_produto;
+    }
+
+    /**
+     * @param codigo_fornecedor the codigo_fornecedor to set
+     */
+    public void setCodigo_produto(long codigo_produto) {
+        this.codigo_produto = codigo_produto;
+    }
     
 }
